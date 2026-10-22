@@ -21,3 +21,4 @@ C:\Users\muham\OneDrive\Desktop\.NET\ch.20-21.10.2026\ConsoleApp\obj\Debug\net10
 C:\Users\muham\OneDrive\Desktop\.NET\ch.20-21.10.2026\ConsoleApp\obj\Debug\net10.0\ConsoleApp.pdb
 C:\Users\muham\OneDrive\Desktop\.NET\ch.20-21.10.2026\ConsoleApp\obj\Debug\net10.0\ConsoleApp.genruntimeconfig.cache
 C:\Users\muham\OneDrive\Desktop\.NET\ch.20-21.10.2026\ConsoleApp\obj\Debug\net10.0\ref\ConsoleApp.dll
+C:\Users\muham\OneDrive\Desktop\.NET\ch.20-21.10.2026\ConsoleApp\obj\Debug\net10.0\ConsoleApp.sourcelink.json

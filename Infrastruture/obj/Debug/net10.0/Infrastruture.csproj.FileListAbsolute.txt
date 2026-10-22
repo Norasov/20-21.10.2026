@@ -13,3 +13,4 @@ C:\Users\muham\OneDrive\Desktop\.NET\ch.20-21.10.2026\Infrastruture\obj\Debug\ne
 C:\Users\muham\OneDrive\Desktop\.NET\ch.20-21.10.2026\Infrastruture\obj\Debug\net10.0\refint\Infrastruture.dll
 C:\Users\muham\OneDrive\Desktop\.NET\ch.20-21.10.2026\Infrastruture\obj\Debug\net10.0\Infrastruture.pdb
 C:\Users\muham\OneDrive\Desktop\.NET\ch.20-21.10.2026\Infrastruture\obj\Debug\net10.0\ref\Infrastruture.dll
+C:\Users\muham\OneDrive\Desktop\.NET\ch.20-21.10.2026\Infrastruture\obj\Debug\net10.0\Infrastruture.sourcelink.json
