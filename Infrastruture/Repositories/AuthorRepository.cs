@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+using System.Data;
 using Domain.Entities;
 using Domain.Interfaces;
 using Infrastruture.Data;
@@ -11,67 +11,92 @@ public class AuthorRepository : IAuthorRepository
     public void AddAuthor(Author author)
     {
         using var connection = Database.Connection();
-        connection.Open();
-        var query = @$"insert into authors(fullname,country,birthyear) values
-        (@fullname, @country,@birthyear)";
-        var cmd = new NpgsqlCommand(query,connection);
-        cmd.Parameters.AddWithValue("fullname",author.FullName);
-        cmd.Parameters.AddWithValue("country",author.Country);
-        cmd.Parameters.AddWithValue("birthyear",author.BirthYear);
-        cmd.ExecuteNonQuery();
+        var query = "select * from authors";
+        NpgsqlDataAdapter adapter = new(query, connection);
+        DataSet ds = new();
+        adapter.Fill(ds);
+        NpgsqlCommandBuilder builder = new(adapter);
+        DataTable authorsTable = ds.Tables[0];
+        DataRow dataRow = authorsTable.NewRow();
+        dataRow["fullname"] = author.FullName;
+        dataRow["country"] = author.Country;
+        dataRow["birthyear"] = author.BirthYear;
+        authorsTable.Rows.Add(dataRow);
+        adapter.Update(ds);
         System.Console.WriteLine("Added!");
     }
 
     public void DeleteAuthor(int id)
     {
         using var connection = Database.Connection();
-        connection.Open();
-        var query = $"delete from authors where id = @id";
-        var cmd = new NpgsqlCommand(query,connection);
-        cmd.Parameters.AddWithValue("id",id);
-        cmd.ExecuteNonQuery();
-        System.Console.WriteLine("Deleted!");
+        var query = "select * from authors";
+        NpgsqlDataAdapter adapter = new(query, connection);
+        DataSet ds = new();
+        adapter.Fill(ds);
+        NpgsqlCommandBuilder builder = new(adapter);
+        DataTable authorsTable = ds.Tables[0];
+        bool f = false;
+        foreach (DataRow item in authorsTable.Rows)
+        {
+            if (Convert.ToInt32(item["id"]) == id)
+            {
+                item.Delete();
+                f = true;
+                break;
+            }
+        }
+        if (f)
+        {
+            adapter.Update(ds);
+            System.Console.WriteLine("Deleted!");
+        }
+        else System.Console.WriteLine("author not found");
     }
 
     public Author GetAuthor(int id)
     {
         using var connection = Database.Connection();
-        connection.Open();
-        var query = $"select id,fullname,country,birthyear from authors where id = @id";
-        var cmd = new NpgsqlCommand(query,connection);
-        cmd.Parameters.AddWithValue("id",id);
-        var reader = cmd.ExecuteReader();
-            Author author = new();
-        while (reader.Read())
+        var query = "select * from authors";
+        NpgsqlDataAdapter adapter = new(query, connection);
+        DataSet ds = new();
+        adapter.Fill(ds);
+        DataTable authorsTable = ds.Tables[0];
+        foreach (DataRow item in authorsTable.Rows)
         {
-            author.Id = reader.GetInt32(0);
-            author.FullName = reader.GetString(1);
-            author.Country = reader.GetString(2);
-            author.BirthYear = reader.GetInt32(3);
+            if (Convert.ToInt32(item["id"]) == id)
+            {
+                Author author = new();
+                author.Id = Convert.ToInt32(item["id"]);
+                author.FullName = item["fullname"].ToString()!;
+                author.Country = item["country"].ToString()!;
+                author.BirthYear = Convert.ToInt32(item["birthyear"]);
+                return author;
+            }
         }
-        return author;
+        throw new Exception("Author not found");
     }
 
     public List<Author> GetAuthors()
     {
         using var connection = Database.Connection();
-        connection.Open();
-        var query = "select id, fullname, country, birthyear from authors";
-        var cmd = new NpgsqlCommand(query,connection);
-        var reader = cmd.ExecuteReader();
+        var query = "select * from authors";
+        NpgsqlDataAdapter adapter = new(query, connection);
+        DataSet ds = new();
+        adapter.Fill(ds);
+        DataTable authorsTable = ds.Tables[0];
         List<Author> authors = [];
-        while (reader.Read())
+        foreach (DataRow item in authorsTable.Rows)
         {
             Author author = new();
-            author.Id = reader.GetInt32(0);
-            author.FullName = reader.GetString(1);
-            author.Country = reader.GetString(2);
-            author.BirthYear = reader.GetInt32(3);
+            author.Id = Convert.ToInt32(item["id"]);
+            author.FullName = item["fullname"].ToString()!;
+            author.Country = item["country"].ToString()!;
+            author.BirthYear = Convert.ToInt32(item["birthyear"]);
             authors.Add(author);
         }
         foreach (var item in authors)
         {
-            System.Console.WriteLine(item.Id+" "+item.FullName+" "+item.Country+" "+item.BirthYear);
+            System.Console.WriteLine(item.Id + " | " + item.FullName + " | " + item.Country + " | " + item.BirthYear);
         }
         return authors;
     }
@@ -79,17 +104,30 @@ public class AuthorRepository : IAuthorRepository
     public void UpdateAuthor(Author author)
     {
         using var connection = Database.Connection();
-        connection.Open();
-        var query = @$"update authors set fullname = @FullName, 
-        country = @Country, birthyear = @BirthYear
-        where id = @id";
-        var cmd = new NpgsqlCommand(query,connection);
-        cmd.Parameters.AddWithValue("fullname",author.FullName);
-        cmd.Parameters.AddWithValue("country",author.Country);
-        cmd.Parameters.AddWithValue("birthyear",author.BirthYear);
-        cmd.Parameters.AddWithValue("id",author.Id);
-        cmd.ExecuteNonQuery();
-        System.Console.WriteLine("Updated!");
+        var query = "select * from authors";
+        NpgsqlDataAdapter adapter = new(query, connection);
+        DataSet ds = new();
+        adapter.Fill(ds);
+        NpgsqlCommandBuilder builder = new(adapter);
+        DataTable authorsTable = ds.Tables[0];
+        bool f = false;
+        foreach (DataRow item in authorsTable.Rows)
+        {
+            if (Convert.ToInt32(item["id"]) == author.Id)
+            {
+                item["fullname"] = author.FullName;
+                item["country"] = author.Country;
+                item["birthyear"] = author.BirthYear;
+                f = true;
+                break;
+            }
+        }
+        if (f)
+        {
+            adapter.Update(ds);
+            System.Console.WriteLine("Updated!");
+        }
+        else System.Console.WriteLine("Author not found!");
     }
 
 }

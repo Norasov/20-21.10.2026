@@ -9,6 +9,6 @@ public interface IBookRepository
     void DeleteBook(int id);
     Book GetBook(int id);
     List<Book> GetBooks();
-    List<Book> GetBooksByGenre(string name);
     List<Book> GetBooksByAuthor(string fullname);
+    List<Book> GetBooksByGenre(string name);
 }

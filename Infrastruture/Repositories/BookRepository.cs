@@ -11,73 +11,92 @@ public class BookRepository : IBookRepository
     public void AddBook(Book book)
     {
         using var connection = Database.Connection();
-        connection.Open();
-        var query = @$"insert into books(title, publishedyear,totalcopies,authorid,genreid) values
-        (@Title,@PublishedYear,@TotalCopies,@authorid,@genreid)";
-        var cmd = new NpgsqlCommand(query, connection);
-        cmd.Parameters.AddWithValue("title", book.Title);
-        cmd.Parameters.AddWithValue("publishedyear", book.PublishedYear);
-        cmd.Parameters.AddWithValue("totalcopies", book.TotalCopies);
-        cmd.Parameters.AddWithValue("authorid", book.AuthorId);
-        cmd.Parameters.AddWithValue("genreid", book.GenreId);
-        cmd.ExecuteNonQuery();
+        var query = "select * from books";
+        NpgsqlDataAdapter adapter = new(query, connection);
+        DataSet ds = new();
+        adapter.Fill(ds);
+        NpgsqlCommandBuilder builder = new(adapter);
+        DataTable booksTable = ds.Tables[0];
+        DataRow dataRow = booksTable.NewRow();
+        book.Title = dataRow["title"].ToString()!;
+        book.PublishedYear = Convert.ToInt32(dataRow["publishedyear"]);
+        book.TotalCopies = Convert.ToInt32(dataRow["totalcopies"]);
+        book.AuthorId = Convert.ToInt32(dataRow["authorid"]);
+        book.GenreId = Convert.ToInt32(dataRow["genreid"]);
+        adapter.Update(ds);
         System.Console.WriteLine("Added!");
     }
 
     public void DeleteBook(int id)
     {
         using var connection = Database.Connection();
-        connection.Open();
-        var query = @$"delete from books where id = @id";
-        var cmd = new NpgsqlCommand(query, connection);
-        cmd.Parameters.AddWithValue("id", id);
-        cmd.ExecuteNonQuery();
-        System.Console.WriteLine("Delete!");
+        var query = "select * from books";
+        NpgsqlDataAdapter adapter = new(query, connection);
+        DataSet ds = new();
+        adapter.Fill(ds);
+        NpgsqlCommandBuilder builder = new(adapter);
+        DataTable booksTable = ds.Tables[0];
+        bool f = false;
+        foreach (DataRow item in booksTable.Rows)
+        {
+            if (Convert.ToInt32(item["id"]) == id)
+            {
+                item.Delete();
+                f = true;
+                break;
+            }
+        }
+        if (f)
+        {
+            adapter.Update(ds);
+            System.Console.WriteLine("Deleted!");
+        }
+        else System.Console.WriteLine("Book not found");
     }
 
     public Book GetBook(int id)
     {
         using var connection = Database.Connection();
-        connection.Open();
-        var query = $"Select id, title, publishedyear, totalcopies, authorid,genreid from books where id = @id";
-        var cmd = new NpgsqlCommand(query, connection);
-        cmd.Parameters.AddWithValue("id", id);
-        var reader = cmd.ExecuteReader();
-        Book book = new();
-        while (reader.Read())
+        var query = "select * from books where id = @id";
+        NpgsqlDataAdapter adapter = new(query, connection);
+        adapter.SelectCommand!.Parameters.AddWithValue("@id", id);
+        DataSet ds = new();
+        adapter.Fill(ds);
+        DataTable booksTable = ds.Tables[0];
+        if (booksTable.Rows.Count == 0)
         {
-            book.Id = reader.GetInt32(0);
-            book.Title = reader.GetString(1);
-            book.PublishedYear = reader.GetInt32(2);
-            book.TotalCopies = reader.GetInt32(3);
-            book.AuthorId = reader.GetInt32(4);
-            book.GenreId = reader.GetInt32(5);
+            throw new Exception("Book not found");
         }
+        DataRow dataRow = booksTable.Rows[0];
+        Book book = new();
+        book.Id = Convert.ToInt32(dataRow["id"]);
+        book.Title = dataRow["title"].ToString()!;
+        book.PublishedYear = Convert.ToInt32(dataRow["publishedyear"]);
+        book.TotalCopies = Convert.ToInt32(dataRow["totalcopies"]);
         return book;
     }
 
     public List<Book> GetBooks()
     {
         using var connection = Database.Connection();
-        connection.Open();
-        var query = @$"select id, title, publishedyear, totalcopies, authorid, genreid from books";
-        var cmd = new NpgsqlCommand(query, connection);
-        var reader = cmd.ExecuteReader();
-        List<Book> books = new();
-        while (reader.Read())
+        var query = "select * from books";
+        NpgsqlDataAdapter adapter = new(query, connection);
+        DataSet ds = new();
+        adapter.Fill(ds);
+        DataTable booksTable = ds.Tables[0];
+        List<Book> books = [];
+        foreach (DataRow item in booksTable.Rows)
         {
             Book book = new();
-            book.Id = reader.GetInt32(0);
-            book.Title = reader.GetString(1);
-            book.PublishedYear = reader.GetInt32(2);
-            book.TotalCopies = reader.GetInt32(3);
-            book.AuthorId = reader.IsDBNull(4) ? null : reader.GetInt32(4);
-            book.GenreId = reader.IsDBNull(5) ? null : reader.GetInt32(5);
+            book.Id = Convert.ToInt32(item["id"]);
+            book.Title = item["title"].ToString()!;
+            book.PublishedYear = Convert.ToInt32(item["publishedyear"]);
+            book.TotalCopies = Convert.ToInt32(item["totalcopies"]);
             books.Add(book);
         }
         foreach (var item in books)
         {
-            System.Console.WriteLine(item.Id + " | " + item.Title + " | " + item.PublishedYear + " | " + item.TotalCopies + " | " + item.AuthorId + " | " + item.GenreId);
+            System.Console.WriteLine(item.Id + " | " + item.Title + " | " + item.PublishedYear + " | " + item.TotalCopies);
         }
         return books;
     }
@@ -90,18 +109,21 @@ public class BookRepository : IBookRepository
         from books b
         join authors a on b.authorid = a.id
         where a.fullname = @fullname";
-        var cmd = new NpgsqlCommand(query, connection);
-        cmd.Parameters.AddWithValue("fullname", fullname);
-        var reader = cmd.ExecuteReader();
+        NpgsqlDataAdapter adapter = new(query, connection);
+        adapter.SelectCommand!.Parameters.AddWithValue("@fullname", fullname);
+        DataSet ds = new();
+        adapter.Fill(ds);
+        DataTable booksTable = ds.Tables[0];
         List<Book> books = [];
-        while (reader.Read())
+        foreach (DataRow item in booksTable.Rows)
         {
             Book book = new();
-            book.Id = reader.GetInt32(0);
-            book.Title = reader.GetString(1);
-            book.PublishedYear = reader.GetInt32(2);
-            book.TotalCopies = reader.GetInt32(3);
+            book.Id = Convert.ToInt32(item["id"]);
+            book.Title = item["title"].ToString()!;
+            book.PublishedYear = Convert.ToInt32(item["publishedyear"]);
+            book.TotalCopies = Convert.ToInt32(item["totalcopies"]);
             books.Add(book);
+
         }
         foreach (var item in books)
         {
@@ -113,23 +135,25 @@ public class BookRepository : IBookRepository
     public List<Book> GetBooksByGenre(string name)
     {
         using var connection = Database.Connection();
-        connection.Open();
         var query = @"select b.id, b.title, b.publishedyear,b.totalcopies 
         from books b
         join genres g on b.genreid = g.id
         where g.name = @name";
-        var cmd = new NpgsqlCommand(query, connection);
-        cmd.Parameters.AddWithValue("name", name);
-        var reader = cmd.ExecuteReader();
+        NpgsqlDataAdapter adapter = new(query, connection);
+        adapter.SelectCommand!.Parameters.AddWithValue("@name",name);
+        DataSet ds = new();
+        adapter.Fill(ds);
+        DataTable booksTable = ds.Tables[0];
         List<Book> books = [];
-        while (reader.Read())
+        foreach (DataRow item in booksTable.Rows)
         {
             Book book = new();
-            book.Id = reader.GetInt32(0);
-            book.Title = reader.GetString(1);
-            book.PublishedYear = reader.GetInt32(2);
-            book.TotalCopies = reader.GetInt32(3);
+            book.Id = Convert.ToInt32(item["id"]);
+            book.Title = item["title"].ToString()!;
+            book.PublishedYear = Convert.ToInt32(item["publishedyear"]);
+            book.TotalCopies = Convert.ToInt32(item["totalcopies"]);
             books.Add(book);
+
         }
         foreach (var item in books)
         {
@@ -141,18 +165,28 @@ public class BookRepository : IBookRepository
     public void UpdateBook(Book book)
     {
         using var connection = Database.Connection();
-        connection.Open();
-        var query = @$"update books 
-        set title = @Title, 
-        publishedyear = @PublishedYear, 
-        totalcopies = @TotalCopies
-        where id =@Id";
-        var cmd = new NpgsqlCommand(query, connection);
-        cmd.Parameters.AddWithValue("title", book.Title);
-        cmd.Parameters.AddWithValue("publishedyear", book.PublishedYear);
-        cmd.Parameters.AddWithValue("totalcopies", book.TotalCopies);
-        cmd.Parameters.AddWithValue("id", book.Id);
-        cmd.ExecuteNonQuery();
-        System.Console.WriteLine("Updated!");
+        var query = "select * from books";
+        NpgsqlDataAdapter adapter = new(query, connection);
+        DataSet ds = new();
+        adapter.Fill(ds);
+        DataTable booksTable = ds.Tables[0];
+        bool f = false;
+        foreach (DataRow item in booksTable.Rows)
+        {
+            if (Convert.ToInt32(item["id"]) == book.Id)
+            {
+                item["title"] = book.Title;
+                item["publishedyear"] = book.PublishedYear;
+                item["totalcopies"] = book.TotalCopies;
+                f = true;
+                break;
+            }
+        }
+        if (f)
+        {
+            adapter.Update(ds);
+            System.Console.WriteLine("Updated!");
+        }
+        else System.Console.WriteLine("Book Bot found");
     }
 }
