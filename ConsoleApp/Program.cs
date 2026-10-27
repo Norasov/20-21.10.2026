@@ -1,192 +1,365 @@
-﻿using System.Security.Cryptography;
+﻿using ConsoleApp;
 using Domain.Entities;
+using Domain.Validators;
+using Infrastruture.Data;
 using Infrastruture.Repositories;
 
-var repo = new BookRepository();
-var author = new AuthorRepository();
-var genre = new GenreRepository();
+Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+if (!Database.TestConnection(out var connectionError))
+{
+    Console.WriteLine($"Не удалось подключиться к базе данных: {connectionError}");
+    return;
+}
+
+var books = new BookRepository();
+var authors = new AuthorRepository();
+var genres = new GenreRepository();
 
 while (true)
 {
-    System.Console.WriteLine("========================================");
-    System.Console.WriteLine(@"1. Show all books.
-2. Show book by id.
-3. Add new book.
-4. Update book.
-5.Delete book.
-6.Add new author
-7.Get an author.
-8.Get authors
-9.Update author
-10.Delete author
-11.Add new genre
-12.Get a genre.
-13.Get genres
-14.Update genre
-15.Delete genre
-16.Get books by author
-17.Get books by genre
-0.Exit.");
+    Console.WriteLine("========================================");
+    Console.WriteLine(@"1. Все книги
+2. Книга по id
+3. Добавить книгу
+4. Изменить книгу
+5. Удалить книгу
+6. Добавить автора
+7. Автор по id
+8. Все авторы
+9. Изменить автора
+10. Удалить автора
+11. Добавить жанр
+12. Жанр по id
+13. Все жанры
+14. Изменить жанр
+15. Удалить жанр
+16. Книги автора
+17. Книги жанра
+0. Выход");
 
-    var a = Console.ReadLine();
-    switch (a)
+    var choice = Input.ReadText("Выберите пункт: ");
+
+    try
     {
-        case "1":
-            var books = repo.GetBooks();
-            break;
-        case "2":
-            System.Console.Write("Enter id: ");
-            var id = Convert.ToInt32(Console.ReadLine());
-            var bb = repo.GetBook(id);
-            System.Console.WriteLine(bb.Id + " " + bb.Title + " " + bb.PublishedYear + " " + bb.TotalCopies);
-            break;
-        case "3":
-            System.Console.Write("Enter title: ");
-            var t = Console.ReadLine()!;
-            System.Console.Write("Enter published year: ");
-            var py = Convert.ToInt32(Console.ReadLine());
-            System.Console.Write("Enter total copies: ");
-            var tc = Convert.ToInt32(Console.ReadLine());
-            System.Console.Write("Enter author id: ");
-            var authorid = Convert.ToInt32(Console.ReadLine());
-            System.Console.Write("Enter id of genre: ");
-            var genreid = Convert.ToInt32(Console.ReadLine());
-            var bbb = new Book()
+        switch (choice)
+        {
+            case "1":
             {
-                Title = t,
-                PublishedYear = py,
-                TotalCopies = tc,
-                AuthorId = authorid,
-                GenreId = genreid
-            };
-            repo.AddBook(bbb);
-            break;
-        case "4":
-            System.Console.Write("Enter id: ");
-            var uid = Convert.ToInt32(Console.ReadLine());
-            System.Console.Write("Enter title: ");
-            var ut = Console.ReadLine()!;
-            System.Console.Write("Enter published year: ");
-            var upy = Convert.ToInt32(Console.ReadLine());
-            System.Console.Write("Enter total copies: ");
-            var utc = Convert.ToInt32(Console.ReadLine());
-            var ubbb = new Book()
+                var all = books.GetBooks();
+                if (all.Count == 0)
+                {
+                    Console.WriteLine("Книг нет.");
+                    break;
+                }
+
+                foreach (var item in all)
+                    Console.WriteLine($"{item.Id} | {item.Title} | {item.PublishedYear} | {item.TotalCopies}");
+                break;
+            }
+            case "2":
             {
-                Id = uid,
-                Title = ut,
-                PublishedYear = upy,
-                TotalCopies = utc
-            };
-            repo.UpdateBook(ubbb);
-            break;
-        case "5":
-            System.Console.Write("Enter id: ");
-            var did = Convert.ToInt32(Console.ReadLine());
-            repo.DeleteBook(did);
-            break;
-        case "6":
-            System.Console.Write("Enter name: ");
-            var name = Console.ReadLine()!;
+                var id = Input.ReadInt("Введите id: ");
+                if (id is null) break;
 
-            System.Console.Write("Enter country: ");
-            var country = Console.ReadLine()!;
+                var book = books.GetBook(id.Value);
+                if (book is null)
+                {
+                    Console.WriteLine("Книга не найдена.");
+                    break;
+                }
 
-            System.Console.Write("Enter birthyear: ");
-            int birthyear = Convert.ToInt32(Console.ReadLine());
-            Author author1 = new()
+                Console.WriteLine($"{book.Id} | {book.Title} | {book.PublishedYear} | {book.TotalCopies}");
+                break;
+            }
+            case "3":
             {
-                FullName = name,
-                Country = country,
-                BirthYear = birthyear
-            };
-            author.AddAuthor(author1);
-            break;
-        case "7":
-            System.Console.Write("Enter id: ");
-            var aid = Convert.ToInt32(Console.ReadLine());
-            var aa = author.GetAuthor(aid);
-            System.Console.WriteLine(aa.Id + " " + aa.FullName + " " + aa.Country + " " + aa.BirthYear);
-            break;
-        case "8":
-            var authors = author.GetAuthors();
-            break;
-        case "9":
-            System.Console.Write("Enter id: ");
-            var auid = Convert.ToInt32(Console.ReadLine());
+                var title = Input.ReadText("Введите название: ");
 
-            System.Console.Write("Enter name: ");
-            var uname = Console.ReadLine()!;
+                var year = Input.ReadInt("Введите год выпуска: ");
+                if (year is null) break;
 
-            System.Console.Write("Enter country: ");
-            var ucountry = Console.ReadLine()!;
+                var copies = Input.ReadInt("Введите количество копий: ");
+                if (copies is null) break;
 
-            System.Console.Write("Enter birthyear: ");
-            var ubirthyear = Convert.ToInt32(Console.ReadLine());
-            Author uauthor = new()
+                var bookAuthorId = Input.ReadInt("Введите id автора: ");
+                if (bookAuthorId is null) break;
+
+                var bookGenreId = Input.ReadInt("Введите id жанра: ");
+                if (bookGenreId is null) break;
+
+                var newBook = new Book
+                {
+                    Title = title,
+                    PublishedYear = year.Value,
+                    TotalCopies = copies.Value,
+                    AuthorId = bookAuthorId.Value,
+                    GenreId = bookGenreId.Value
+                };
+
+                if (Validation.HasErrors(BookValidator.Validate(newBook))) break;
+
+                books.AddBook(newBook);
+                Console.WriteLine("Книга добавлена.");
+                break;
+            }
+            case "4":
             {
-                Id = auid,
-                FullName = uname,
-                Country = ucountry,
-                BirthYear = ubirthyear
-            };
-            author.UpdateAuthor(uauthor);
-            break;
-        case "10":
-            System.Console.Write("Enter id: ");
-            var id1 = Convert.ToInt32(Console.ReadLine());
-            author.DeleteAuthor(id1);
-            break;
-        case "11":
-            System.Console.Write("Enter name: ");
-            var gname = Console.ReadLine()!;
+                var id = Input.ReadInt("Введите id книги: ");
+                if (id is null) break;
 
-            Genre genre1 = new()
+                var existing = books.GetBook(id.Value);
+                if (existing is null)
+                {
+                    Console.WriteLine("Книга не найдена.");
+                    break;
+                }
+
+                var title = Input.ReadText("Введите название: ");
+
+                var year = Input.ReadInt("Введите год выпуска: ");
+                if (year is null) break;
+
+                var copies = Input.ReadInt("Введите количество копий: ");
+                if (copies is null) break;
+
+                var bookAuthorId = Input.ReadInt("Введите id автора: ");
+                if (bookAuthorId is null) break;
+
+                var bookGenreId = Input.ReadInt("Введите id жанра: ");
+                if (bookGenreId is null) break;
+
+                existing.Title = title;
+                existing.PublishedYear = year.Value;
+                existing.TotalCopies = copies.Value;
+                existing.AuthorId = bookAuthorId.Value;
+                existing.GenreId = bookGenreId.Value;
+
+                if (Validation.HasErrors(BookValidator.Validate(existing))) break;
+
+                books.UpdateBook(existing);
+                Console.WriteLine("Книга обновлена.");
+                break;
+            }
+            case "5":
             {
-                Name = gname
-            };
-            genre.AddGenre(genre1);
-            break;
-        case "12":
-            System.Console.Write("Enter id: ");
-            var gid = Convert.ToInt32(Console.ReadLine());
-            var gg = genre.GetGenre(gid);
-            System.Console.WriteLine(gg.Id + " " + gg.Name);
-            break;
-        case "13":
-            var genres = genre.GetGenres();
-            break;
-        case "14":
-            System.Console.Write("Enter id: ");
-            var guid = Convert.ToInt32(Console.ReadLine());
+                var id = Input.ReadInt("Введите id: ");
+                if (id is null) break;
 
-            System.Console.Write("Enter name: ");
-            var guname = Console.ReadLine()!;
+                if (books.GetBook(id.Value) is null)
+                {
+                    Console.WriteLine("Книга не найдена.");
+                    break;
+                }
 
-            Genre ugenre = new()
+                books.DeleteBook(id.Value);
+                Console.WriteLine("Книга удалена.");
+                break;
+            }
+            case "6":
             {
-               Id = guid,
-               Name = guname
-            };
-            genre.UpdateGenre(ugenre);
-            break;
-        case "15":
-            System.Console.Write("Enter id: ");
-            var gid1 = Convert.ToInt32(Console.ReadLine());
-            genre.DeleteGenre(gid1);
-            break;
-        case "16":
-            System.Console.Write("Enter name of author: ");
-            var authorName = Console.ReadLine()!;
-            repo.GetBooksByAuthor(authorName);
-            break;
-        case "17":
-            System.Console.Write("Enter name of genre: ");
-            var genreName = Console.ReadLine()!;
-            repo.GetBooksByGenre(genreName);
-            break;
-        case "0":
-            System.Console.WriteLine("Exiting ...");
-            return;
+                var name = Input.ReadText("Введите имя: ");
+                var country = Input.ReadText("Введите страну: ");
+
+                var birthYear = Input.ReadInt("Введите год рождения: ");
+                if (birthYear is null) break;
+
+                var newAuthor = new Author
+                {
+                    FullName = name,
+                    Country = country,
+                    BirthYear = birthYear.Value
+                };
+
+                if (Validation.HasErrors(AuthorValidator.Validate(newAuthor))) break;
+
+                authors.AddAuthor(newAuthor);
+                Console.WriteLine("Автор добавлен.");
+                break;
+            }
+            case "7":
+            {
+                var id = Input.ReadInt("Введите id: ");
+                if (id is null) break;
+
+                var found = authors.GetAuthor(id.Value);
+                if (found is null)
+                {
+                    Console.WriteLine("Автор не найден.");
+                    break;
+                }
+
+                Console.WriteLine($"{found.Id} | {found.FullName} | {found.Country} | {found.BirthYear}");
+                break;
+            }
+            case "8":
+            {
+                var all = authors.GetAuthors();
+                if (all.Count == 0)
+                {
+                    Console.WriteLine("Авторов нет.");
+                    break;
+                }
+
+                foreach (var item in all)
+                    Console.WriteLine($"{item.Id} | {item.FullName} | {item.Country} | {item.BirthYear}");
+                break;
+            }
+            case "9":
+            {
+                var id = Input.ReadInt("Введите id автора: ");
+                if (id is null) break;
+
+                var existing = authors.GetAuthor(id.Value);
+                if (existing is null)
+                {
+                    Console.WriteLine("Автор не найден.");
+                    break;
+                }
+
+                var name = Input.ReadText("Введите имя: ");
+                var country = Input.ReadText("Введите страну: ");
+
+                var birthYear = Input.ReadInt("Введите год рождения: ");
+                if (birthYear is null) break;
+
+                existing.FullName = name;
+                existing.Country = country;
+                existing.BirthYear = birthYear.Value;
+
+                if (Validation.HasErrors(AuthorValidator.Validate(existing))) break;
+
+                authors.UpdateAuthor(existing);
+                Console.WriteLine("Автор обновлён.");
+                break;
+            }
+            case "10":
+            {
+                var id = Input.ReadInt("Введите id: ");
+                if (id is null) break;
+
+                if (authors.GetAuthor(id.Value) is null)
+                {
+                    Console.WriteLine("Автор не найден.");
+                    break;
+                }
+
+                authors.DeleteAuthor(id.Value);
+                Console.WriteLine("Автор удалён.");
+                break;
+            }
+            case "11":
+            {
+                var name = Input.ReadText("Введите название жанра: ");
+                var newGenre = new Genre { Name = name };
+
+                if (Validation.HasErrors(GenreValidator.Validate(newGenre))) break;
+
+                genres.AddGenre(newGenre);
+                Console.WriteLine("Жанр добавлен.");
+                break;
+            }
+            case "12":
+            {
+                var id = Input.ReadInt("Введите id: ");
+                if (id is null) break;
+
+                var found = genres.GetGenre(id.Value);
+                if (found is null)
+                {
+                    Console.WriteLine("Жанр не найден.");
+                    break;
+                }
+
+                Console.WriteLine($"{found.Id} | {found.Name}");
+                break;
+            }
+            case "13":
+            {
+                var all = genres.GetGenres();
+                if (all.Count == 0)
+                {
+                    Console.WriteLine("Жанров нет.");
+                    break;
+                }
+
+                foreach (var item in all)
+                    Console.WriteLine($"{item.Id} | {item.Name}");
+                break;
+            }
+            case "14":
+            {
+                var id = Input.ReadInt("Введите id жанра: ");
+                if (id is null) break;
+
+                var existing = genres.GetGenre(id.Value);
+                if (existing is null)
+                {
+                    Console.WriteLine("Жанр не найден.");
+                    break;
+                }
+
+                existing.Name = Input.ReadText("Введите новое название: ");
+
+                if (Validation.HasErrors(GenreValidator.Validate(existing))) break;
+
+                genres.UpdateGenre(existing);
+                Console.WriteLine("Жанр обновлён.");
+                break;
+            }
+            case "15":
+            {
+                var id = Input.ReadInt("Введите id: ");
+                if (id is null) break;
+
+                if (genres.GetGenre(id.Value) is null)
+                {
+                    Console.WriteLine("Жанр не найден.");
+                    break;
+                }
+
+                genres.DeleteGenre(id.Value);
+                Console.WriteLine("Жанр удалён.");
+                break;
+            }
+            case "16":
+            {
+                var authorName = Input.ReadText("Введите имя автора: ");
+                var found = books.GetBooksByAuthor(authorName);
+                if (found.Count == 0)
+                {
+                    Console.WriteLine("Ничего не найдено.");
+                    break;
+                }
+
+                foreach (var item in found)
+                    Console.WriteLine($"{item.Id} | {item.Title} | {item.PublishedYear} | {item.TotalCopies}");
+                break;
+            }
+            case "17":
+            {
+                var genreName = Input.ReadText("Введите название жанра: ");
+                var found = books.GetBooksByGenre(genreName);
+                if (found.Count == 0)
+                {
+                    Console.WriteLine("Ничего не найдено.");
+                    break;
+                }
+
+                foreach (var item in found)
+                    Console.WriteLine($"{item.Id} | {item.Title} | {item.PublishedYear} | {item.TotalCopies}");
+                break;
+            }
+            case "0":
+                Console.WriteLine("Выход...");
+                return;
+            default:
+                Console.WriteLine("Неизвестный пункт меню.");
+                break;
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(DbErrors.Describe(ex));
     }
 }
-

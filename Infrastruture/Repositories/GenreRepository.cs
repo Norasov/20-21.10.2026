@@ -1,8 +1,8 @@
 using System.Data;
+using Dapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Infrastruture.Data;
-using Npgsql;
 
 namespace Infrastruture.Repositories;
 
@@ -11,121 +11,40 @@ public class GenreRepository : IGenreRepository
     public void AddGenre(Genre genre)
     {
         using var connection = Database.Connection();
-        var sql = "select * from genres";
-        NpgsqlDataAdapter adapter = new(sql, connection);
-        DataSet ds = new();
-        adapter.Fill(ds);
-        NpgsqlCommandBuilder builder = new(adapter);
-        DataTable genresTable = ds.Tables[0];
-        DataRow row = genresTable.NewRow();
-        row["name"] = genre.Name;
-        genresTable.Rows.Add(row);
-        adapter.Update(ds);
-        System.Console.WriteLine("Added!");
+        connection.Open();
+        var query = "insert into genres(name) values(@name)";
+        connection.Execute(query, genre);
     }
 
     public void DeleteGenre(int id)
     {
         using var connection = Database.Connection();
-        var sql = "select * from genres";
-        NpgsqlDataAdapter adapter = new(sql, connection);
-        DataSet ds = new();
-        adapter.Fill(ds);
-        NpgsqlCommandBuilder builder = new(adapter);
-        DataTable genresTable = ds.Tables[0];
-        bool deleted = false;
-        foreach (DataRow dataRow in genresTable.Rows)
-        {
-            if (Convert.ToInt32(dataRow["id"]) == id)
-            {
-                dataRow.Delete();
-                deleted = true;
-                break;
-            }
-        }
-        if (deleted)
-        {
-            adapter.Update(ds);
-            System.Console.WriteLine("Deleted!");
-        }
-        else
-        {
-            System.Console.WriteLine("Genre not found!");
-        }
+        connection.Open();
+        var query = "delete from genres where id = @id";
+        connection.Execute(query, new{id});
     }
 
-    public Genre GetGenre(int id)
+    public Genre? GetGenre(int id)
     {
         using var connection = Database.Connection();
+        connection.Open();
         var query = "select * from genres where id = @id";
-
-        NpgsqlDataAdapter adapter = new(query, connection);
-        adapter.SelectCommand!.Parameters.AddWithValue("@id", id);
-        DataSet ds = new();
-        adapter.Fill(ds);
-        DataTable genresTable = ds.Tables[0];
-        if (genresTable.Rows.Count == 0)
-        {
-            throw new Exception("Genre not found");
-        }
-
-        DataRow item = genresTable.Rows[0];
-
-        Genre genre = new();
-        genre.Id = Convert.ToInt32(item["id"]);
-        genre.Name = item["name"].ToString()!;
-        return genre;
+        return connection.QueryFirstOrDefault<Genre>(query, new{id});
     }
 
     public List<Genre> GetGenres()
     {
         using var connection = Database.Connection();
-        var sql = "select id, name from genres";
-        var adapter = new NpgsqlDataAdapter(sql, connection);
-        var ds = new DataSet();
-        adapter.Fill(ds);
-        DataTable genresTable = ds.Tables[0];
-
-        List<Genre> genres = [];
-
-        foreach (DataRow item in genresTable.Rows)
-        {
-            Genre genre = new();
-            genre.Id = Convert.ToInt32(item[0]);
-            genre.Name = item[1].ToString()!;
-            genres.Add(genre);
-        }
-        foreach (Genre item in genres)
-        {
-            System.Console.WriteLine(item.Id + " | " + item.Name);
-        }
-        return genres;
+        connection.Open();
+        var query = "select * from genres";
+        return connection.Query<Genre>(query).ToList();
     }
 
     public void UpdateGenre(Genre genre)
     {
         using var connection = Database.Connection();
-        var query = "select * from genres";
-        NpgsqlDataAdapter adapter = new(query, connection);
-        DataSet ds = new();
-        adapter.Fill(ds);
-        NpgsqlCommandBuilder builder = new(adapter);
-        DataTable genresTable = ds.Tables[0];
-        bool f = false;
-        foreach (DataRow item in genresTable.Rows)
-        {
-            if (Convert.ToInt32(item["id"]) == genre.Id)
-            {
-                item["name"] = genre.Name;
-                f = true;
-                break;
-            }
-        }
-        if (f)
-        {
-            adapter.Update(ds);
-            System.Console.WriteLine("Updated!");
-        }
-        else System.Console.WriteLine("Genre not found");
+        connection.Open();
+        var query = "update genres set name = @name where id = @id";
+        connection.Execute(query,genre);
     }
 }
