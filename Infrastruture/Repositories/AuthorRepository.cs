@@ -7,9 +7,14 @@ namespace Infrastruture.Repositories;
 
 public class AuthorRepository : IAuthorRepository
 {
+    private readonly DapperContext _context;
+    public AuthorRepository(DapperContext context)
+    {
+        _context = context;
+    }
     public void AddAuthor(Author author)
     {
-        using var connection = Database.Connection();
+        using var connection = _context.Connection();
         connection.Open();
         var query = @"insert into authors(fullname, country, birthyear) values
         (@fullname, @country, @birthyear)";
@@ -18,7 +23,7 @@ public class AuthorRepository : IAuthorRepository
 
     public void DeleteAuthor(int id)
     {
-        using var connection = Database.Connection();
+        using var connection = _context.Connection();
         connection.Open();
         var query = "delete from authors where id = @id";
         connection.Execute(query, new{id});
@@ -26,7 +31,7 @@ public class AuthorRepository : IAuthorRepository
 
     public Author? GetAuthor(int id)
     {
-        using var connection = Database.Connection();
+        using var connection = _context.Connection();
         connection.Open();
         var query = "select * from authors where id = @id";
         return connection.QueryFirstOrDefault<Author>(query,new{id});
@@ -34,15 +39,24 @@ public class AuthorRepository : IAuthorRepository
 
     public List<Author> GetAuthors()
     {
-        using var connection = Database.Connection();
+        using var connection = _context.Connection();
         connection.Open();
         var query = "select * from authors";
         return connection.Query<Author>(query).ToList();
     }
 
+    public int GetAuthorsAmount()
+    {
+        using var connection = _context.Connection();
+        connection.Open();
+        var query = @"select count(*) from authors";
+        return connection.ExecuteScalar<int>(query);
+    }
+
+
     public void UpdateAuthor(Author author)
     {
-        using var connection = Database.Connection();
+        using var connection = _context.Connection();
         connection.Open();
         var query = "update authors set fullname = @fullname, country= @country, birthyear = @birthyear where id = @id";
         connection.Execute(query, author);

@@ -9,4 +9,5 @@ public interface IAuthorRepository
     void DeleteAuthor(int id);
     Author? GetAuthor(int id);
     List<Author> GetAuthors();
+    int GetAuthorsAmount();
 }

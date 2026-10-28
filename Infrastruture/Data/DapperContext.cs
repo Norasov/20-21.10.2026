@@ -1,19 +1,19 @@
+using System.Data;
 using Npgsql;
-
 namespace Infrastruture.Data;
 
-public static class Database
+public class DapperContext
 {
-    private static readonly string? connectionString =
+    private readonly string? connectionString =
     Environment.GetEnvironmentVariable("booknest");
-    public static NpgsqlConnection Connection()
+    public IDbConnection Connection()
     {
         if (string.IsNullOrWhiteSpace(connectionString))
             throw new InvalidOperationException($"Переменная окружения 'booknest' не задана.");
         return new NpgsqlConnection(connectionString);
     }
 
-    public static bool TestConnection(out string error)
+    public bool TestConnection(out string error)
     {
         try
         {

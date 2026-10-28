@@ -9,7 +9,7 @@ public static class GenreValidator
         List<string> errors = [];
         
         if(string.IsNullOrWhiteSpace(genre.Name))
-            errors.Add("Название жанра не может быть пустым");
+            errors.Add("Название жанра не может быть пустым.");
         
         else if(genre.Name.Length > 100)
             errors.Add("Название жанра не должно быть длиннее 100 символов.");

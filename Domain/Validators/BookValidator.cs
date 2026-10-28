@@ -9,13 +9,13 @@ public static class BookValidator
         List<string> errors = [];
 
         if(string.IsNullOrWhiteSpace(book.Title))
-            errors.Add("Название книги не должно бы пустым");
+            errors.Add("Название книги не должно быть пустым.");
 
         if(book.PublishedYear <= 0 || book.PublishedYear > DateTime.Now.Year)
-            errors.Add($"Год выуска должен быть от 1 до {DateTime.Now.Year}");
+            errors.Add($"Год выпуска должен быть от 1 до {DateTime.Now.Year}.");
 
         if(book.TotalCopies < 0)
-            errors.Add("Количество копий не может быть отрицательным");
+            errors.Add("Количество копий не может быть отрицательным.");
 
         return errors;
     }

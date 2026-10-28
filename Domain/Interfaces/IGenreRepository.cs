@@ -9,4 +9,5 @@ public interface IGenreRepository
     void DeleteGenre(int id);
     Genre? GetGenre(int id);
     List<Genre> GetGenres();
+    int GetGenresAmount();
 }
