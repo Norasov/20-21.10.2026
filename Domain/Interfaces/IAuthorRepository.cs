@@ -4,10 +4,10 @@ namespace Domain.Interfaces;
 
 public interface IAuthorRepository
 {
-    void AddAuthor(Author author);
-    void UpdateAuthor(Author author);
-    void DeleteAuthor(int id);
-    Author? GetAuthor(int id);
-    List<Author> GetAuthors();
-    int GetAuthorsAmount();
+    Task AddAuthorAsync(Author author);
+    Task UpdateAuthorAsync(Author author);
+    Task DeleteAuthorAsync(int id);
+    Task<Author?> GetAuthorAsync(int id);
+    Task<List<Author>> GetAuthorsAsync();
+    Task<int> GetAuthorsAmountAsync();
 }

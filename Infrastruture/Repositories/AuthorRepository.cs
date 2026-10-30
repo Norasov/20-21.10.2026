@@ -12,53 +12,54 @@ public class AuthorRepository : IAuthorRepository
     {
         _context = context;
     }
-    public void AddAuthor(Author author)
+    public async Task AddAuthorAsync(Author author)
     {
         using var connection = _context.Connection();
         connection.Open();
         var query = @"insert into authors(fullname, country, birthyear) values
         (@fullname, @country, @birthyear)";
-        connection.Execute(query,author);
+        await connection.ExecuteAsync(query,author);
     }
 
-    public void DeleteAuthor(int id)
+    public async Task DeleteAuthorAsync(int id)
     {
         using var connection = _context.Connection();
         connection.Open();
         var query = "delete from authors where id = @id";
-        connection.Execute(query, new{id});
+        await connection.ExecuteAsync(query, new{id});
     }
 
-    public Author? GetAuthor(int id)
+    public async Task<Author?> GetAuthorAsync(int id)
     {
         using var connection = _context.Connection();
         connection.Open();
         var query = "select * from authors where id = @id";
-        return connection.QueryFirstOrDefault<Author>(query,new{id});
+        return await connection.QueryFirstOrDefaultAsync<Author>(query,new{id});
     }
 
-    public List<Author> GetAuthors()
+    public async Task<List<Author>> GetAuthorsAsync()
     {
         using var connection = _context.Connection();
         connection.Open();
         var query = "select * from authors";
-        return connection.Query<Author>(query).ToList();
+        var list = await connection.QueryAsync<Author>(query);
+        return list.ToList();
     }
 
-    public int GetAuthorsAmount()
+    public async Task<int> GetAuthorsAmountAsync()
     {
         using var connection = _context.Connection();
         connection.Open();
         var query = @"select count(*) from authors";
-        return connection.ExecuteScalar<int>(query);
+        return await connection.ExecuteScalarAsync<int>(query);
     }
 
 
-    public void UpdateAuthor(Author author)
+    public async Task UpdateAuthorAsync(Author author)
     {
         using var connection = _context.Connection();
         connection.Open();
         var query = "update authors set fullname = @fullname, country= @country, birthyear = @birthyear where id = @id";
-        connection.Execute(query, author);
+        await connection.ExecuteAsync(query, author);
     }
 }

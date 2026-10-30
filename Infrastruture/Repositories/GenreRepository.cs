@@ -12,51 +12,52 @@ public class GenreRepository : IGenreRepository
     {
         _context = context;
     }
-    public void AddGenre(Genre genre)
+    public async Task AddGenreAsync(Genre genre)
     {
         using var connection = _context.Connection();
         connection.Open();
         var query = "insert into genres(name) values(@name)";
-        connection.Execute(query, genre);
+        await connection.ExecuteAsync(query, genre);
     }
 
-    public void DeleteGenre(int id)
+    public async Task DeleteGenreAsync(int id)
     {
         using var connection = _context.Connection();
         connection.Open();
         var query = "delete from genres where id = @id";
-        connection.Execute(query, new{id});
+        await connection.ExecuteAsync(query, new{id});
     }
 
-    public Genre? GetGenre(int id)
+    public async Task<Genre?> GetGenreAsync(int id)
     {
         using var connection = _context.Connection();
         connection.Open();
         var query = "select * from genres where id = @id";
-        return connection.QueryFirstOrDefault<Genre>(query, new{id});
+        return await connection.QueryFirstOrDefaultAsync<Genre>(query, new{id});
     }
 
-    public List<Genre> GetGenres()
+    public async Task<List<Genre>> GetGenresAsync()
     {
         using var connection = _context.Connection();
         connection.Open();
         var query = "select * from genres";
-        return connection.Query<Genre>(query).ToList();
+        var list = await connection.QueryAsync<Genre>(query);
+        return list.ToList();
     }
 
-    public int GetGenresAmount()
+    public async Task<int> GetGenresAmountAsync()
     {
         using var connection = _context.Connection();
         var query = "select count(*) from genres";
-        return connection.ExecuteScalar<int>(query);
+        return await connection.ExecuteScalarAsync<int>(query);
     }
 
 
-    public void UpdateGenre(Genre genre)
+    public async Task UpdateGenreAsync(Genre genre)
     {
         using var connection = _context.Connection();
         connection.Open();
         var query = "update genres set name = @name where id = @id";
-        connection.Execute(query,genre);
+        await connection.ExecuteAsync(query,genre);
     }
 }

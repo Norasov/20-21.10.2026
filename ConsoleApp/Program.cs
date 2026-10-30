@@ -57,7 +57,7 @@ while (true)
         {
             case "1":
                 {
-                    var all = books.GetBooks();
+                    var all = await books.GetBooksAsync();
                     if (all.Count == 0)
                     {
                         Console.WriteLine("Книг нет.");
@@ -73,7 +73,7 @@ while (true)
                     var id = Input.ReadInt("Введите id: ");
                     if (id is null) break;
 
-                    var book = books.GetBook(id.Value);
+                    var book = await books.GetBookAsync(id.Value);
                     if (book is null)
                     {
                         Console.WriteLine("Книга не найдена.");
@@ -95,7 +95,7 @@ while (true)
 
                     var bookAuthorId = Input.ReadInt("Введите id автора: ");
                     if (bookAuthorId is null) break;
-                    if(authors.GetAuthor(bookAuthorId.Value) is null)
+                    if(await authors.GetAuthorAsync(bookAuthorId.Value) is null)
                     {
                         System.Console.WriteLine("Автор не найден.");
                         break;
@@ -103,7 +103,7 @@ while (true)
 
                     var bookGenreId = Input.ReadInt("Введите id жанра: ");
                     if (bookGenreId is null) break;
-                    if(genres.GetGenre(bookGenreId.Value) is null)
+                    if(await genres.GetGenreAsync(bookGenreId.Value) is null)
                     {
                         System.Console.WriteLine("Жанр не найден.");
                         break;
@@ -120,7 +120,7 @@ while (true)
 
                     if (Validation.HasErrors(BookValidator.Validate(newBook))) break;
 
-                    books.AddBook(newBook);
+                    await books.AddBookAsync(newBook);
                     Console.WriteLine("Книга добавлена.");
                     break;
                 }
@@ -129,7 +129,7 @@ while (true)
                     var id = Input.ReadInt("Введите id книги: ");
                     if (id is null) break;
 
-                    var existing = books.GetBook(id.Value);
+                    var existing = await books.GetBookAsync(id.Value);
                     if (existing is null)
                     {
                         Console.WriteLine("Книга не найдена.");
@@ -146,7 +146,7 @@ while (true)
 
                     var bookAuthorId = Input.ReadInt("Введите id автора: ");
                     if (bookAuthorId is null) break;
-                    if(authors.GetAuthor(bookAuthorId.Value) is null)
+                    if(await authors.GetAuthorAsync(bookAuthorId.Value) is null)
                     {
                         System.Console.WriteLine("Автор не найден.");
                         break;
@@ -154,7 +154,7 @@ while (true)
 
                     var bookGenreId = Input.ReadInt("Введите id жанра: ");
                     if (bookGenreId is null) break;
-                    if(genres.GetGenre(bookGenreId.Value) is null)
+                    if(await genres.GetGenreAsync(bookGenreId.Value) is null)
                     {
                         System.Console.WriteLine("Жанр не найден.");
                         break;
@@ -168,7 +168,7 @@ while (true)
 
                     if (Validation.HasErrors(BookValidator.Validate(existing))) break;
 
-                    books.UpdateBook(existing);
+                    await books.UpdateBookAsync(existing);
                     Console.WriteLine("Книга обновлена.");
                     break;
                 }
@@ -177,20 +177,20 @@ while (true)
                     var id = Input.ReadInt("Введите id: ");
                     if (id is null) break;
 
-                    if (books.GetBook(id.Value) is null)
+                    if (await books.GetBookAsync(id.Value) is null)
                     {
                         Console.WriteLine("Книга не найдена.");
                         break;
                     }
 
-                    books.DeleteBook(id.Value);
+                    await books.DeleteBookAsync(id.Value);
                     Console.WriteLine("Книга удалена.");
                     break;
                 }
             case "6":
                 {
                     var authorName = Input.ReadText("Введите имя автора: ");
-                    var found = books.GetBooksByAuthor(authorName);
+                    var found = await books.GetBooksByAuthorAsync(authorName);
                     if (found.Count == 0)
                     {
                         Console.WriteLine("Ничего не найдено.");
@@ -204,7 +204,7 @@ while (true)
             case "7":
                 {
                     var genreName = Input.ReadText("Введите название жанра: ");
-                    var found = books.GetBooksByGenre(genreName);
+                    var found = await books.GetBooksByGenreAsync(genreName);
                     if (found.Count == 0)
                     {
                         Console.WriteLine("Ничего не найдено.");
@@ -217,19 +217,19 @@ while (true)
                 }
             case "8":
                 {
-                    System.Console.WriteLine($"Книг: {books.GetBooksAmount()}");
+                    System.Console.WriteLine($"Книг: {await books.GetBooksAmountAsync()}");
                     break;
                 }
             case "9":
                 {
                     var id = Input.ReadInt("Введите id автора: ");
                     if (id is null) break;
-                    if (authors.GetAuthor(id.Value) is null)
+                    if (await authors.GetAuthorAsync(id.Value) is null)
                     {
                         System.Console.WriteLine("Автор не найден.");
                         break;
                     }
-                    var minYear = books.GetMinPublishedYearByAuthor(id.Value);
+                    var minYear = await books.GetMinPublishedYearByAuthorAsync(id.Value);
                     if (minYear == 0)
                     {
                         System.Console.WriteLine("У автора нет книг.");
@@ -242,12 +242,12 @@ while (true)
                 {
                     var id = Input.ReadInt("Введите id автора: ");
                     if (id is null) break;
-                    if (authors.GetAuthor(id.Value) is null)
+                    if (await authors.GetAuthorAsync(id.Value) is null)
                     {
                         System.Console.WriteLine("Автор не найден.");
                         break;
                     }
-                    var maxYear = books.GetMaxPublishedYearByAuthor(id.Value);
+                    var maxYear = await books.GetMaxPublishedYearByAuthorAsync(id.Value);
                     if (maxYear == 0)
                     {
                         System.Console.WriteLine("У автора нет книг.");
@@ -260,12 +260,12 @@ while (true)
                 {
                     var id = Input.ReadInt("Введите id жaнра: ");
                     if (id is null) break;
-                    if (genres.GetGenre(id.Value) is null)
+                    if (await genres.GetGenreAsync(id.Value) is null)
                     {
                         System.Console.WriteLine("Жанр не найден.");
                         break;
                     }
-                    var minYear = books.GetMinPublishedYearByGenre(id.Value);
+                    var minYear = await books.GetMinPublishedYearByGenreAsync(id.Value);
                     if (minYear == 0)
                     {
                         System.Console.WriteLine("Нет книг с таким жанром");
@@ -278,12 +278,12 @@ while (true)
                 {
                     var id = Input.ReadInt("Введите id жaнра: ");
                     if (id is null) break;
-                    if (genres.GetGenre(id.Value) is null)
+                    if (await genres.GetGenreAsync(id.Value) is null)
                     {
                         System.Console.WriteLine("Жанр не найден.");
                         break;
                     }
-                    var maxYear = books.GetMaxPublishedYearByGenre(id.Value);
+                    var maxYear = await books.GetMaxPublishedYearByGenreAsync(id.Value);
                     if (maxYear == 0)
                     {
                         System.Console.WriteLine("Нет книг с таким жанром");
@@ -301,7 +301,7 @@ while (true)
                         System.Console.WriteLine("Введите корректный год");
                         break;
                     }
-                    var countBooksOfYear = books.GetAmountByPublishedYear(year.Value);
+                    var countBooksOfYear = await books.GetAmountByPublishedYearAsync(year.Value);
                     if(countBooksOfYear == 0)
                     {
                         System.Console.WriteLine("В этом году книг не выпущено.");
@@ -314,12 +314,12 @@ while (true)
                 {
                     var id = Input.ReadInt("Введите id жанра: ");
                     if(id is null) break;
-                    if(genres.GetGenre(id.Value) is null)
+                    if(await genres.GetGenreAsync(id.Value) is null)
                     {
                         System.Console.WriteLine("Жанр не найден.");
                         break;
                     }
-                    var countBooksOfGenre = books.GetAmountByGenre(id.Value);
+                    var countBooksOfGenre = await books.GetAmountByGenreAsync(id.Value);
                     if(countBooksOfGenre == 0)
                     {
                         System.Console.WriteLine("Нет книг с таким жанром");
@@ -345,7 +345,7 @@ while (true)
 
                     if (Validation.HasErrors(AuthorValidator.Validate(newAuthor))) break;
 
-                    authors.AddAuthor(newAuthor);
+                    await authors.AddAuthorAsync(newAuthor);
                     Console.WriteLine("Автор добавлен.");
                     break;
                 }
@@ -354,7 +354,7 @@ while (true)
                     var id = Input.ReadInt("Введите id: ");
                     if (id is null) break;
 
-                    var found = authors.GetAuthor(id.Value);
+                    var found = await authors.GetAuthorAsync(id.Value);
                     if (found is null)
                     {
                         Console.WriteLine("Автор не найден.");
@@ -366,7 +366,7 @@ while (true)
                 }
             case "17":
                 {
-                    var all = authors.GetAuthors();
+                    var all = await authors.GetAuthorsAsync();
                     if (all.Count == 0)
                     {
                         Console.WriteLine("Авторов нет.");
@@ -382,7 +382,7 @@ while (true)
                     var id = Input.ReadInt("Введите id автора: ");
                     if (id is null) break;
 
-                    var existing = authors.GetAuthor(id.Value);
+                    var existing = await authors.GetAuthorAsync(id.Value);
                     if (existing is null)
                     {
                         Console.WriteLine("Автор не найден.");
@@ -401,7 +401,7 @@ while (true)
 
                     if (Validation.HasErrors(AuthorValidator.Validate(existing))) break;
 
-                    authors.UpdateAuthor(existing);
+                    await authors.UpdateAuthorAsync(existing);
                     Console.WriteLine("Автор обновлён.");
                     break;
                 }
@@ -410,19 +410,19 @@ while (true)
                     var id = Input.ReadInt("Введите id: ");
                     if (id is null) break;
 
-                    if (authors.GetAuthor(id.Value) is null)
+                    if (await authors.GetAuthorAsync(id.Value) is null)
                     {
                         Console.WriteLine("Автор не найден.");
                         break;
                     }
 
-                    authors.DeleteAuthor(id.Value);
+                    await authors.DeleteAuthorAsync(id.Value);
                     Console.WriteLine("Автор удалён.");
                     break;
                 }
             case "20":
                 {
-                    System.Console.WriteLine($"Авторов: {authors.GetAuthorsAmount()}");
+                    System.Console.WriteLine($"Авторов: {await authors.GetAuthorsAmountAsync()}");
                     break;
                 }
             case "21":
@@ -432,7 +432,7 @@ while (true)
 
                     if (Validation.HasErrors(GenreValidator.Validate(newGenre))) break;
 
-                    genres.AddGenre(newGenre);
+                    await genres.AddGenreAsync(newGenre);
                     Console.WriteLine("Жанр добавлен.");
                     break;
                 }
@@ -441,7 +441,7 @@ while (true)
                     var id = Input.ReadInt("Введите id: ");
                     if (id is null) break;
 
-                    var found = genres.GetGenre(id.Value);
+                    var found = await genres.GetGenreAsync(id.Value);
                     if (found is null)
                     {
                         Console.WriteLine("Жанр не найден.");
@@ -453,7 +453,7 @@ while (true)
                 }
             case "23":
                 {
-                    var all = genres.GetGenres();
+                    var all = await genres.GetGenresAsync();
                     if (all.Count == 0)
                     {
                         Console.WriteLine("Жанров нет.");
@@ -469,7 +469,7 @@ while (true)
                     var id = Input.ReadInt("Введите id жанра: ");
                     if (id is null) break;
 
-                    var existing = genres.GetGenre(id.Value);
+                    var existing = await genres.GetGenreAsync(id.Value);
                     if (existing is null)
                     {
                         Console.WriteLine("Жанр не найден.");
@@ -480,7 +480,7 @@ while (true)
 
                     if (Validation.HasErrors(GenreValidator.Validate(existing))) break;
 
-                    genres.UpdateGenre(existing);
+                    await genres.UpdateGenreAsync(existing);
                     Console.WriteLine("Жанр обновлён.");
                     break;
                 }
@@ -489,19 +489,19 @@ while (true)
                     var id = Input.ReadInt("Введите id: ");
                     if (id is null) break;
 
-                    if (genres.GetGenre(id.Value) is null)
+                    if (await genres.GetGenreAsync(id.Value) is null)
                     {
                         Console.WriteLine("Жанр не найден.");
                         break;
                     }
 
-                    genres.DeleteGenre(id.Value);
+                    await genres.DeleteGenreAsync(id.Value);
                     Console.WriteLine("Жанр удалён.");
                     break;
                 }
             case "26":
                 {
-                    System.Console.WriteLine($"Жанров: {genres.GetGenresAmount()}");
+                    System.Console.WriteLine($"Жанров: {await genres.GetGenresAmountAsync()}");
                     break;
                 }
             case "0":

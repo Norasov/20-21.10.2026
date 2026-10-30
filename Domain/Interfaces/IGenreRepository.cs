@@ -4,10 +4,10 @@ namespace Domain.Interfaces;
 
 public interface IGenreRepository
 {
-    void AddGenre(Genre genre);
-    void UpdateGenre(Genre genre);
-    void DeleteGenre(int id);
-    Genre? GetGenre(int id);
-    List<Genre> GetGenres();
-    int GetGenresAmount();
+    Task AddGenreAsync(Genre genre);
+    Task UpdateGenreAsync(Genre genre);
+    Task DeleteGenreAsync(int id);
+    Task<Genre?> GetGenreAsync(int id);
+    Task<List<Genre>> GetGenresAsync();
+    Task<int> GetGenresAmountAsync();
 }
