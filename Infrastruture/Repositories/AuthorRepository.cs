@@ -7,26 +7,28 @@ namespace Infrastruture.Repositories;
 
 public class AuthorRepository : IAuthorRepository
 {
-    private readonly DapperContext _context;
-    public AuthorRepository(DapperContext context)
+    private readonly AppDbContext _context;
+    public AuthorRepository(AppDbContext context)
     {
         _context = context;
     }
-    public async Task AddAuthorAsync(Author author)
+    public async Task<bool> AddAuthorAsync(Author author)
     {
         using var connection = _context.Connection();
         connection.Open();
         var query = @"insert into authors(fullname, country, birthyear) values
         (@fullname, @country, @birthyear)";
-        await connection.ExecuteAsync(query,author);
+        var addAuthor = await connection.ExecuteAsync(query,author);
+        return addAuthor > 0;
     }
 
-    public async Task DeleteAuthorAsync(int id)
+    public async Task<bool> DeleteAuthorAsync(int id)
     {
         using var connection = _context.Connection();
         connection.Open();
         var query = "delete from authors where id = @id";
-        await connection.ExecuteAsync(query, new{id});
+        var deleteAuthor = await connection.ExecuteAsync(query, new{id});
+        return deleteAuthor > 0;
     }
 
     public async Task<Author?> GetAuthorAsync(int id)
@@ -55,11 +57,12 @@ public class AuthorRepository : IAuthorRepository
     }
 
 
-    public async Task UpdateAuthorAsync(Author author)
+    public async Task<bool> UpdateAuthorAsync(Author author)
     {
         using var connection = _context.Connection();
         connection.Open();
         var query = "update authors set fullname = @fullname, country= @country, birthyear = @birthyear where id = @id";
-        await connection.ExecuteAsync(query, author);
+        var updateAuthor = await connection.ExecuteAsync(query, author);
+        return updateAuthor > 0;
     }
 }

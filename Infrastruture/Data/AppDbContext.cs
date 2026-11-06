@@ -2,16 +2,10 @@ using System.Data;
 using Npgsql;
 namespace Infrastruture.Data;
 
-public class DapperContext
+public class AppDbContext
 {
-    private readonly string? connectionString =
-    Environment.GetEnvironmentVariable("booknest");
-    public IDbConnection Connection()
-    {
-        if (string.IsNullOrWhiteSpace(connectionString))
-            throw new InvalidOperationException($"Переменная окружения 'booknest' не задана.");
-        return new NpgsqlConnection(connectionString);
-    }
+    private readonly string? connectionString = "Host=localhost;Port=5432;Database=booknest;Username=postgres;Password=p000";
+    public IDbConnection Connection() => new NpgsqlConnection(connectionString);
 
     public bool TestConnection(out string error)
     {

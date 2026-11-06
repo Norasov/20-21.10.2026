@@ -8,27 +8,29 @@ namespace Infrastruture.Repositories;
 
 public class BookRepository : IBookRepository
 {
-    private readonly DapperContext _context;
-    public BookRepository(DapperContext context)
+    private readonly AppDbContext _context;
+    public BookRepository(AppDbContext context)
     {
         _context = context;
     }
 
-    public async Task AddBookAsync(Book book)
+    public async Task<bool> AddBookAsync(Book book)
     {
         using var connection = _context.Connection();
         connection.Open();
         var query = @"insert into books(title, publishedyear, totalcopies, authorid, genreid) values
         (@title, @publishedyear, @totalcopies, @authorid, @genreid)";
-        await connection.ExecuteAsync(query, book);
+        var addBook = await connection.ExecuteAsync(query, book);
+        return addBook > 0;
     }
 
-    public async Task DeleteBookAsync(int id)
+    public async Task<bool> DeleteBookAsync(int id)
     {
         using var connection = _context.Connection();
         connection.Open();
         var query = "delete from books where id = @id";
-        await connection.ExecuteAsync(query, new { id });
+        var deleteBook = await connection.ExecuteAsync(query, new { id });
+        return deleteBook > 0;
     }
 
     public async Task<int> GetAmountByGenreAsync(int genreId)
@@ -127,7 +129,7 @@ public class BookRepository : IBookRepository
         return await connection.ExecuteScalarAsync<int>(query, new { genreId });
     }
 
-    public async Task UpdateBookAsync(Book book)
+    public async Task<bool> UpdateBookAsync(Book book)
     {
         using var connection = _context.Connection();
         connection.Open();
@@ -137,7 +139,8 @@ public class BookRepository : IBookRepository
         authorid = @authorid,
         genreid = @genreid
         where id = @id";
-        await connection.ExecuteAsync(query, book);
+        var updateBook = await connection.ExecuteAsync(query, book);
+        return updateBook > 0;
     }
 
     public async Task<Book?> GetBookAsync(int id)

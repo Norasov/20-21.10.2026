@@ -5,7 +5,7 @@ using Infrastruture.Repositories;
 using Infrastruture.Data;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
-DapperContext context = new();
+AppDbContext context = new();
 if (!context.TestConnection(out var connectionError))
 {
     System.Console.WriteLine($"Не удалось подключиться к базе данных: {connectionError}");
