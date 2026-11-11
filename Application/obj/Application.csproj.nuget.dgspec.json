@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\ch.20-21.10.2026\\Application\\Application.csproj": {}
+    "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Application\\Application.csproj": {}
   },
   "projects": {
-    "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\ch.20-21.10.2026\\Application\\Application.csproj": {
+    "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Application\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\ch.20-21.10.2026\\Application\\Application.csproj",
+        "projectUniqueName": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Application\\Application.csproj",
         "projectName": "Application",
-        "projectPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\ch.20-21.10.2026\\Application\\Application.csproj",
+        "projectPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Application\\Application.csproj",
         "packagesPath": "C:\\Users\\muham\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\ch.20-21.10.2026\\Application\\obj\\",
+        "outputPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Application\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\muham\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -26,8 +26,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\ch.20-21.10.2026\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\ch.20-21.10.2026\\Domain\\Domain.csproj"
+              "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Domain\\Domain.csproj"
               }
             }
           }
@@ -341,14 +341,14 @@
         }
       }
     },
-    "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\ch.20-21.10.2026\\Domain\\Domain.csproj": {
+    "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\ch.20-21.10.2026\\Domain\\Domain.csproj",
+        "projectUniqueName": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\ch.20-21.10.2026\\Domain\\Domain.csproj",
+        "projectPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Domain\\Domain.csproj",
         "packagesPath": "C:\\Users\\muham\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\ch.20-21.10.2026\\Domain\\obj\\",
+        "outputPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\muham\\AppData\\Roaming\\NuGet\\NuGet.Config"

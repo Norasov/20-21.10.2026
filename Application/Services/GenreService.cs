@@ -1,6 +1,6 @@
 using System.Net;
 using Application.Interfaces;
-using Application.Response;
+using Application.Responses;
 using Domain.Entities;
 using Domain.Interfaces;
 
@@ -13,8 +13,8 @@ public class GenreService(IGenreRepository repository) : IGenreService
     {
         var addGenre = await _repository.AddGenreAsync(genre);
         return addGenre == true
-        ? new ApiResponse<bool>(HttpStatusCode.OK, "Added!", addGenre)
-        : new ApiResponse<bool>(HttpStatusCode.InternalServerError, "Not Added!", addGenre);
+        ? new ApiResponse<bool>(HttpStatusCode.Created, "Added!", addGenre)
+        : new ApiResponse<bool>(HttpStatusCode.InternalServerError, "Not Added!", false);
     }
 
     public async Task<ApiResponse<bool>> DeleteGenreAsync(int id)
@@ -22,13 +22,15 @@ public class GenreService(IGenreRepository repository) : IGenreService
         var deleteGenre = await _repository.DeleteGenreAsync(id);
         return deleteGenre == true
         ? new ApiResponse<bool>(HttpStatusCode.OK, "Deleted!", deleteGenre)
-        : new ApiResponse<bool>(HttpStatusCode.InternalServerError, "Not deleted!", deleteGenre);
+        : new ApiResponse<bool>(HttpStatusCode.NotFound, "Not deleted!", false);
     }
 
     public async Task<ApiResponse<Genre>> GetGenreAsync(int id)
     {
         var getGenre = await _repository.GetGenreAsync(id);
-        return new ApiResponse<Genre>(HttpStatusCode.OK, "Genre with id", getGenre);
+        return getGenre != null
+        ? new ApiResponse<Genre>(HttpStatusCode.OK, "Genre with id", getGenre)
+        : new ApiResponse<Genre>(HttpStatusCode.NotFound, "Genre not found");
     }
 
     public async Task<ApiResponse<List<Genre>>> GetGenresAsync()
@@ -42,6 +44,6 @@ public class GenreService(IGenreRepository repository) : IGenreService
         var updateGenre = await _repository.UpdateGenreAsync(genre);
         return updateGenre == true
         ? new ApiResponse<bool>(HttpStatusCode.OK, "Updated!", updateGenre)
-        : new ApiResponse<bool>(HttpStatusCode.InternalServerError, "Not updated!", updateGenre);
+        : new ApiResponse<bool>(HttpStatusCode.NotFound, "Genre not found!", false);
     }
 }

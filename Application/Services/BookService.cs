@@ -1,9 +1,10 @@
-using Application.Response;
+using Application.Interfaces;
+using Application.Responses;
 using Domain.Entities;
 using Domain.Interfaces;
 using System.Net;
 
-namespace Application.Interfaces;
+namespace Application.Services;
 
 public class BookService(IBookRepository repository) : IBookService
 {
@@ -12,8 +13,8 @@ public class BookService(IBookRepository repository) : IBookService
     {
         var addBook = await _repository.AddBookAsync(book);
         return addBook == true
-        ? new ApiResponse<bool>(HttpStatusCode.OK, "Added!", addBook)
-        : new ApiResponse<bool>(HttpStatusCode.InternalServerError, "Not added.", addBook);
+        ? new ApiResponse<bool>(HttpStatusCode.Created, "Added!", addBook)
+        : new ApiResponse<bool>(HttpStatusCode.InternalServerError, "Not added.", false);
     }
 
     public async Task<ApiResponse<bool>> DeleteBookAsync(int id)
@@ -21,13 +22,15 @@ public class BookService(IBookRepository repository) : IBookService
         var deleteBook = await _repository.DeleteBookAsync(id);
         return deleteBook == true
         ? new ApiResponse<bool>(HttpStatusCode.OK, "Deleted!", deleteBook)
-        : new ApiResponse<bool>(HttpStatusCode.InternalServerError, "Not deleted!", deleteBook);
+        : new ApiResponse<bool>(HttpStatusCode.NotFound, "Book not found!", false);
     }
 
     public async Task<ApiResponse<Book>> GetBookAsync(int id)
     {
         var getBook = await _repository.GetBookAsync(id);
-        return new ApiResponse<Book>(HttpStatusCode.OK, "Book with id", getBook);
+        return getBook is null
+        ? new ApiResponse<Book>(HttpStatusCode.NotFound, "Book not found!")
+        : new ApiResponse<Book>(HttpStatusCode.OK, "Book with id", getBook);
     }
 
     public async Task<ApiResponse<List<Book>>> GetBooksAsync()
@@ -41,6 +44,6 @@ public class BookService(IBookRepository repository) : IBookService
         var updateBook = await _repository.UpdateBookAsync(book);
         return updateBook == true
         ? new ApiResponse<bool>(HttpStatusCode.OK, "Updated!", updateBook)
-        : new ApiResponse<bool>(HttpStatusCode.InternalServerError, "Not udated!", updateBook);
+        : new ApiResponse<bool>(HttpStatusCode.NotFound, "Book not found!", false);
     }
 }

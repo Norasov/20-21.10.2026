@@ -1,6 +1,6 @@
 using System.Net;
 using Application.Interfaces;
-using Application.Response;
+using Application.Responses;
 using Domain.Entities;
 using Domain.Interfaces;
 
@@ -14,7 +14,7 @@ public class AuthorService(IAuthorRepository repository) : IAuthorService
     {
         var addAuthor = await _repository.AddAuthorAsync(author);
         return addAuthor == true
-        ? new ApiResponse<bool>(HttpStatusCode.OK, "Added!", addAuthor)
+        ? new ApiResponse<bool>(HttpStatusCode.Created, "Added!", addAuthor)
         : new ApiResponse<bool>(HttpStatusCode.InternalServerError, "Not Added!", addAuthor);
     }
 
@@ -23,13 +23,15 @@ public class AuthorService(IAuthorRepository repository) : IAuthorService
         var deleteAuthor = await _repository.DeleteAuthorAsync(id);
         return deleteAuthor == true
         ? new ApiResponse<bool>(HttpStatusCode.OK,"Deleted!", deleteAuthor)
-        : new ApiResponse<bool>(HttpStatusCode.InternalServerError, "Not Deleted!", deleteAuthor);
+        : new ApiResponse<bool>(HttpStatusCode.NotFound, "Author not found!", false);
     }
 
     public async Task<ApiResponse<Author>> GetAuthorAsync(int id)
     {
         var getAuthor = await _repository.GetAuthorAsync(id);
-        return new ApiResponse<Author>(HttpStatusCode.OK, "Author with id", getAuthor);
+        return getAuthor != null
+        ? new ApiResponse<Author>(HttpStatusCode.OK, "Author with id", getAuthor)
+        : new ApiResponse<Author>(HttpStatusCode.NotFound, "Author not found!");        
     }
 
     public async Task<ApiResponse<List<Author>>> GetAuthorsAsync()
@@ -43,6 +45,6 @@ public class AuthorService(IAuthorRepository repository) : IAuthorService
         var updateAuthor = await _repository.UpdateAuthorAsync(author);
         return updateAuthor == true
         ? new ApiResponse<bool>(HttpStatusCode.OK, "Updated!", updateAuthor)
-        : new ApiResponse<bool>(HttpStatusCode.InternalServerError, "Not updated!", updateAuthor);
+        : new ApiResponse<bool>(HttpStatusCode.NotFound, "Author not found!", false);
     }
 }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2ESMxlT1l/A=",
+  "dgSpecHash": "SW/aacHu48c=",
   "success": true,
-  "projectFilePath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\ch.20-21.10.2026\\API\\API.csproj",
+  "projectFilePath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\API\\API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\muham\\.nuget\\packages\\dapper\\2.1.89\\dapper.2.1.89.nupkg.sha512",
     "C:\\Users\\muham\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.3\\microsoft.aspnetcore.openapi.10.0.3.nupkg.sha512",

@@ -1,5 +1,5 @@
 using Application.Interfaces;
-using Application.Response;
+using Application.Responses;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 

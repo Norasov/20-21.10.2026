@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace Application.Response;
+namespace Application.Responses;
 
 public class ApiResponse<T>
 {

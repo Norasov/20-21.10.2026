@@ -17,7 +17,6 @@ public class BookRepository : IBookRepository
     public async Task<bool> AddBookAsync(Book book)
     {
         using var connection = _context.Connection();
-        connection.Open();
         var query = @"insert into books(title, publishedyear, totalcopies, authorid, genreid) values
         (@title, @publishedyear, @totalcopies, @authorid, @genreid)";
         var addBook = await connection.ExecuteAsync(query, book);
@@ -27,7 +26,6 @@ public class BookRepository : IBookRepository
     public async Task<bool> DeleteBookAsync(int id)
     {
         using var connection = _context.Connection();
-        connection.Open();
         var query = "delete from books where id = @id";
         var deleteBook = await connection.ExecuteAsync(query, new { id });
         return deleteBook > 0;
@@ -36,7 +34,6 @@ public class BookRepository : IBookRepository
     public async Task<int> GetAmountByGenreAsync(int genreId)
     {
         using var connection = _context.Connection();
-        connection.Open();
         var query = @"select count(genreid) from books
         where genreid = @genreid";
         return await connection.ExecuteScalarAsync<int>(query, new { genreId });
@@ -45,7 +42,6 @@ public class BookRepository : IBookRepository
     public async Task<int> GetAmountByPublishedYearAsync(int year)
     {
         using var connection = _context.Connection();
-        connection.Open();
         var query = @"select count(*) from books
         where publishedyear = @publishedyear";
         return await connection.ExecuteScalarAsync<int>(query, new { publishedyear = year });
@@ -55,7 +51,6 @@ public class BookRepository : IBookRepository
     public async Task<List<Book>> GetBooksAsync()
     {
         using var connection = _context.Connection();
-        connection.Open();
         var query = "select * from books";
         var list = await connection.QueryAsync<Book>(query);
         return list.ToList();
@@ -64,7 +59,6 @@ public class BookRepository : IBookRepository
     public async Task<int> GetBooksAmountAsync()
     {
         using var connection = _context.Connection();
-        connection.Open();
         var query = "select count(*) from books";
         return await connection.ExecuteScalarAsync<int>(query);
     }
@@ -73,7 +67,6 @@ public class BookRepository : IBookRepository
     public async Task<List<Book>> GetBooksByAuthorAsync(string fullname)
     {
         using var connection = _context.Connection();
-        connection.Open();
         var query = @"select b.id, b.title,b.publishedyear,b.totalcopies
         from books b
         join authors a on b.authorid = a.id
@@ -85,7 +78,6 @@ public class BookRepository : IBookRepository
     public async Task<List<Book>> GetBooksByGenreAsync(string name)
     {
         using var connection = _context.Connection();
-        connection.Open();
         var query = @"select b.id, b.title, b.publishedyear,b.totalcopies 
         from books b
         join genres g on b.genreid = g.id
@@ -97,7 +89,6 @@ public class BookRepository : IBookRepository
     public async Task<int> GetMaxPublishedYearByAuthorAsync(int authorId)
     {
         using var connection = _context.Connection();
-        connection.Open();
         var query = @"select max(publishedyear) from books
         where authorid = @authorid";
         return await connection.ExecuteScalarAsync<int>(query, new { authorId });
@@ -106,7 +97,6 @@ public class BookRepository : IBookRepository
     public async Task<int> GetMinPublishedYearByAuthorAsync(int authorId)
     {
         using var connection = _context.Connection();
-        connection.Open();
         var query = @"select min(publishedyear) from books
         where authorid = @authorid";
         return await connection.ExecuteScalarAsync<int>(query, new { authorId });
@@ -114,7 +104,6 @@ public class BookRepository : IBookRepository
     public async Task<int> GetMaxPublishedYearByGenreAsync(int genreId)
     {
         using var connection = _context.Connection();
-        connection.Open();
         var query = @"select max(publishedyear) from books
         where genreid = @genreid";
         return await connection.ExecuteScalarAsync<int>(query, new { genreId });
@@ -123,7 +112,6 @@ public class BookRepository : IBookRepository
     public async Task<int> GetMinPublishedYearByGenreAsync(int genreId)
     {
         using var connection = _context.Connection();
-        connection.Open();
         var query = @"select min(publishedyear) from books
         where genreid = @genreid";
         return await connection.ExecuteScalarAsync<int>(query, new { genreId });
@@ -132,7 +120,6 @@ public class BookRepository : IBookRepository
     public async Task<bool> UpdateBookAsync(Book book)
     {
         using var connection = _context.Connection();
-        connection.Open();
         var query = @"update books set title = @title, 
         publishedyear = @publishedyear, 
         totalcopies = @totalcopies,
@@ -146,7 +133,6 @@ public class BookRepository : IBookRepository
     public async Task<Book?> GetBookAsync(int id)
     {
         using var connection = _context.Connection();
-        connection.Open();
         var query = "select * from books where id = @id";
         var book = await connection.QueryFirstOrDefaultAsync<Book>(query, new { id });
         return book;
