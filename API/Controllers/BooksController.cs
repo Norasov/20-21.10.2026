@@ -1,6 +1,6 @@
+using API.Extensions;
+using Application.DTOs.Books;
 using Application.Interfaces;
-using Application.Responses;
-using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -12,32 +12,44 @@ public class BooksController(IBookService service) : ControllerBase
     private readonly IBookService _service = service;
     
     [HttpGet]
-    public Task<ApiResponse<List<Book>>> GetBooks()
+    public async Task<IActionResult> GetBooks()
     {
-        return _service.GetBooksAsync();
+        var books = await _service.GetBooksAsync();
+        return this.ToActionResult(books);
+    }
+
+    [HttpGet("amount-of-books")]
+    public async Task<IActionResult> AmountOfBooks()
+    {
+        var amount = await _service.GetBooksAmountAsync();
+        return this.ToActionResult(amount);
     }
 
     [HttpGet("{id:int}")]
-    public Task<ApiResponse<Book>> GetBook(int id)
+    public async Task<IActionResult> GetBook(int id)
     {
-        return _service.GetBookAsync(id);
+        var book = await _service.GetBookAsync(id);
+        return this.ToActionResult(book);
     }
 
     [HttpPost]
-    public Task<ApiResponse<bool>> AddBook(Book book)
+    public async Task<IActionResult> AddBook(CreateBookDTO bookDTO)
     {
-        return _service.AddBookAsync(book);
+        var add = await _service.AddBookAsync(bookDTO);
+        return this.ToActionResult(add);
     }
 
-    [HttpPut]
-    public Task<ApiResponse<bool>> UpdateBook(Book book)
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdateBook(UpdateBookDTO bookDTO, int id)
     {
-        return _service.UpdateBookAsync(book);
+        var update = await _service.UpdateBookAsync(bookDTO, id);
+        return this.ToActionResult(update);
     }
 
     [HttpDelete("{id:int}")]
-    public Task<ApiResponse<bool>> DeleteBook(int id)
+    public async Task<IActionResult> DeleteBook(int id)
     {
-        return _service.DeleteBookAsync(id);
+        var delete =await _service.DeleteBookAsync(id);
+        return this.ToActionResult(delete);
     }
 }

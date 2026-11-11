@@ -1,6 +1,6 @@
-using System.Net;
+using Application.DTOs.Authors;
+using Application.HttpStatusCodes;
 using Application.Interfaces;
-using Application.Responses;
 using Domain.Entities;
 using Domain.Interfaces;
 
@@ -10,41 +10,83 @@ namespace Application.Services;
 public class AuthorService(IAuthorRepository repository) : IAuthorService
 {
     private readonly IAuthorRepository _repository = repository;
-    public async Task<ApiResponse<bool>> AddAuthorAsync(Author author)
+    public async Task<ServiceStatusCodes<bool>> AddAuthorAsync(AuthorDTO authorDTO)
     {
-        var addAuthor = await _repository.AddAuthorAsync(author);
-        return addAuthor == true
-        ? new ApiResponse<bool>(HttpStatusCode.Created, "Added!", addAuthor)
-        : new ApiResponse<bool>(HttpStatusCode.InternalServerError, "Not Added!", addAuthor);
+        Author author = new()
+        {
+            FullName = authorDTO.FullName,
+            Country = authorDTO.Country,
+            BirthYear = authorDTO.BirthYear,
+        };
+        var add = await _repository.AddAuthorAsync(author);
+
+        return ServiceStatusCodes<bool>.Created(add);
     }
 
-    public async Task<ApiResponse<bool>> DeleteAuthorAsync(int id)
+    public async Task<ServiceStatusCodes<bool>> DeleteAuthorAsync(int id)
     {
-        var deleteAuthor = await _repository.DeleteAuthorAsync(id);
-        return deleteAuthor == true
-        ? new ApiResponse<bool>(HttpStatusCode.OK,"Deleted!", deleteAuthor)
-        : new ApiResponse<bool>(HttpStatusCode.NotFound, "Author not found!", false);
+        var delete = await _repository.DeleteAuthorAsync(id);
+        if(!delete)
+            return ServiceStatusCodes<bool>.NotFound("Нет фвтора с таким идентификатором.");
+
+        return ServiceStatusCodes<bool>.NoContent();
     }
 
-    public async Task<ApiResponse<Author>> GetAuthorAsync(int id)
+    public async Task<ServiceStatusCodes<AuthorDTO>> GetAuthorAsync(int id)
     {
-        var getAuthor = await _repository.GetAuthorAsync(id);
-        return getAuthor != null
-        ? new ApiResponse<Author>(HttpStatusCode.OK, "Author with id", getAuthor)
-        : new ApiResponse<Author>(HttpStatusCode.NotFound, "Author not found!");        
+        var get = await _repository.GetAuthorAsync(id);
+        if(get is null)
+            ServiceStatusCodes<AuthorDTO>.NotFound("Нет автора с таким идентификатором.");
+
+        AuthorDTO authorDTO = new()
+        {
+            FullName = get.FullName,
+            Country = get.Country,
+            BirthYear = get.BirthYear
+        };
+
+        return ServiceStatusCodes<AuthorDTO>.Ok(authorDTO);
     }
 
-    public async Task<ApiResponse<List<Author>>> GetAuthorsAsync()
+    public async Task<ServiceStatusCodes<int>> GetAuthorsAmountAsync()
     {
-        var listAuthors = await _repository.GetAuthorsAsync();
-        return new ApiResponse<List<Author>>(HttpStatusCode.OK, "list of Authors", listAuthors);
+        var amount = await _repository.GetAuthorsAmountAsync();
+        return ServiceStatusCodes<int>.Ok(amount);
     }
 
-    public async Task<ApiResponse<bool>> UpdateAuthorAsync(Author author)
+
+    public async Task<ServiceStatusCodes<List<AuthorDTO>>> GetAuthorsAsync()
     {
-        var updateAuthor = await _repository.UpdateAuthorAsync(author);
-        return updateAuthor == true
-        ? new ApiResponse<bool>(HttpStatusCode.OK, "Updated!", updateAuthor)
-        : new ApiResponse<bool>(HttpStatusCode.NotFound, "Author not found!", false);
+        var authors = await _repository.GetAuthorsAsync();
+
+        List<AuthorDTO> authorDTOs = [];
+        foreach (var author in authors)
+        {
+            AuthorDTO authorDTO = new()
+            {
+                FullName = author.FullName,
+                Country = author.Country,
+                BirthYear = author.BirthYear
+            };
+            authorDTOs.Add(authorDTO);
+        }
+
+        return ServiceStatusCodes<List<AuthorDTO>>.Ok(authorDTOs);
+    }
+
+    public async Task<ServiceStatusCodes<bool>> UpdateAuthorAsync(AuthorDTO authorDTO, int id)
+    {
+        var update = await _repository.GetAuthorAsync(id);
+
+        if(update is null)
+            return ServiceStatusCodes<bool>.NotFound("Нет автора с таким идентификатором.");
+
+
+        update.FullName = authorDTO.FullName;
+        update.Country = authorDTO.Country;
+        update.BirthYear = authorDTO.BirthYear;
+
+        var updated = await _repository.UpdateAuthorAsync(update);
+        return ServiceStatusCodes<bool>.Ok(updated);
     }
 }

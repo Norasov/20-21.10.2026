@@ -1,49 +1,95 @@
+using Application.DTOs.Books;
+using Application.HttpStatusCodes;
 using Application.Interfaces;
-using Application.Responses;
 using Domain.Entities;
 using Domain.Interfaces;
-using System.Net;
 
 namespace Application.Services;
 
 public class BookService(IBookRepository repository) : IBookService
 {
     private readonly IBookRepository _repository = repository;
-    public async Task<ApiResponse<bool>> AddBookAsync(Book book)
+    public async Task<ServiceStatusCodes<bool>> AddBookAsync(CreateBookDTO bookDTO)
     {
-        var addBook = await _repository.AddBookAsync(book);
-        return addBook == true
-        ? new ApiResponse<bool>(HttpStatusCode.Created, "Added!", addBook)
-        : new ApiResponse<bool>(HttpStatusCode.InternalServerError, "Not added.", false);
+        Book book = new()
+        {
+            Title = bookDTO.Title,
+            PublishedYear = bookDTO.PublishedYear,
+            TotalCopies = bookDTO.TotalCopies,
+            AuthorId = bookDTO.AuthorId,
+            GenreId = bookDTO.GenreId
+        };
+        var add = await _repository.AddBookAsync(book);
+
+        return ServiceStatusCodes<bool>.Created(add);
     }
 
-    public async Task<ApiResponse<bool>> DeleteBookAsync(int id)
+    public async Task<ServiceStatusCodes<bool>> DeleteBookAsync(int id)
     {
-        var deleteBook = await _repository.DeleteBookAsync(id);
-        return deleteBook == true
-        ? new ApiResponse<bool>(HttpStatusCode.OK, "Deleted!", deleteBook)
-        : new ApiResponse<bool>(HttpStatusCode.NotFound, "Book not found!", false);
+        var delete = await _repository.DeleteBookAsync(id);
+        if(!delete)
+            return ServiceStatusCodes<bool>.NotFound("Нет книги с таким идентификатором.");
+
+        return ServiceStatusCodes<bool>.NoContent();
     }
 
-    public async Task<ApiResponse<Book>> GetBookAsync(int id)
+    public async Task<ServiceStatusCodes<BookDTO>> GetBookAsync(int id)
     {
-        var getBook = await _repository.GetBookAsync(id);
-        return getBook is null
-        ? new ApiResponse<Book>(HttpStatusCode.NotFound, "Book not found!")
-        : new ApiResponse<Book>(HttpStatusCode.OK, "Book with id", getBook);
+        var book = await _repository.GetBookAsync(id);
+        if(book is null)
+            return ServiceStatusCodes<BookDTO>.NotFound("Нет книги с ткаим идентификатором.");
+        
+        BookDTO bookDTO = new()
+        {
+            Title = book.Title,
+            PublishedYear = book.PublishedYear,
+            TotalCopies = book.TotalCopies,
+        };
+
+        return ServiceStatusCodes<BookDTO>.Ok(bookDTO);
     }
 
-    public async Task<ApiResponse<List<Book>>> GetBooksAsync()
+    public async Task<ServiceStatusCodes<int>> GetBooksAmountAsync()
     {
-        var listBooks = await _repository.GetBooksAsync();
-        return new ApiResponse<List<Book>>(HttpStatusCode.OK, "List of books.", listBooks);
+        var amount = await _repository.GetBooksAmountAsync();
+        return ServiceStatusCodes<int>.Ok(amount);
     }
 
-    public async Task<ApiResponse<bool>> UpdateBookAsync(Book book)
+
+    public async Task<ServiceStatusCodes<List<BookDTO>>> GetBooksAsync()
     {
-        var updateBook = await _repository.UpdateBookAsync(book);
-        return updateBook == true
-        ? new ApiResponse<bool>(HttpStatusCode.OK, "Updated!", updateBook)
-        : new ApiResponse<bool>(HttpStatusCode.NotFound, "Book not found!", false);
+        var books = await _repository.GetBooksAsync();
+
+        List<BookDTO> bookDTOs = [];
+        foreach (var book in books)
+        {
+            BookDTO bookDTO = new()
+            {
+                Title = book.Title,
+                PublishedYear = book.PublishedYear,
+                TotalCopies = book.TotalCopies
+            };
+            bookDTOs.Add(bookDTO);
+        }
+
+        return ServiceStatusCodes<List<BookDTO>>.Ok(bookDTOs);
     }
+
+    public async Task<ServiceStatusCodes<bool>> UpdateBookAsync(UpdateBookDTO bookDTO, int id)
+    {
+        var update = await _repository.GetBookAsync(id);
+        if(update is null)
+            return ServiceStatusCodes<bool>.NotFound("Нет книги с таким идентификатором.");
+        
+
+        update.Title = bookDTO.Title;
+        update.PublishedYear = bookDTO.PublishedYear;
+        update.AuthorId = bookDTO.AuthorId;
+        update.GenreId = bookDTO.GenreId;
+
+        var updated = await _repository.UpdateBookAsync(update);
+
+        return ServiceStatusCodes<bool>.Ok(updated);
+    }
+
 }

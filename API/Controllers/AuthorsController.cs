@@ -1,6 +1,6 @@
+using API.Extensions;
+using Application.DTOs.Authors;
 using Application.Interfaces;
-using Application.Responses;
-using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -12,32 +12,44 @@ public class AuthorsController(IAuthorService service) : ControllerBase
     private readonly IAuthorService _service = service;
 
     [HttpGet]
-    public Task<ApiResponse<List<Author>>> GetAuthors()
+    public async Task<IActionResult> GetAuthors()
     {
-        return _service.GetAuthorsAsync();
+        var authors = await _service.GetAuthorsAsync();
+        return this.ToActionResult(authors);
     }
 
     [HttpGet("{id:int}")]
-    public Task<ApiResponse<Author>> GetAuthor(int id)
+    public async Task<IActionResult> GetAuthor(int id)
     {
-        return _service.GetAuthorAsync(id);
+        var author = await _service.GetAuthorAsync(id);
+        return this.ToActionResult(author);
     }
 
     [HttpPost]
-    public Task<ApiResponse<bool>> AddAuthor(Author author)
+    public async Task<IActionResult> AddAuthor(AuthorDTO authorDTO)
     {
-        return _service.AddAuthorAsync(author);
+        var add = await _service.AddAuthorAsync(authorDTO);
+        return this.ToActionResult(add);
     }
 
     [HttpPut] 
-    public Task<ApiResponse<bool>> UpdateAuthor(Author author)
+    public async Task<IActionResult> UpdateAuthor(AuthorDTO authorDTO, int id)
     {
-        return _service.UpdateAuthorAsync(author);
+        var update = await _service.UpdateAuthorAsync(authorDTO, id);
+        return this.ToActionResult(update);
     }
 
     [HttpDelete("{id:int}")]
-    public Task<ApiResponse<bool>> DeleteAuthor(int id)
+    public async Task<IActionResult> DeleteAuthor(int id)
     {
-        return _service.DeleteAuthorAsync(id);
+        var delete = await _service.DeleteAuthorAsync(id);
+        return this.ToActionResult(delete);
+    }
+
+    [HttpGet("amount-of-authors")]
+    public async Task<IActionResult> AmountOfAuthors()
+    {
+        var amount = await _service.GetAuthorsAmountAsync();
+        return this.ToActionResult(amount);
     }
 }

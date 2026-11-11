@@ -1,13 +1,14 @@
-using Application.Responses;
-using Domain.Entities;
+using Application.DTOs.Genres;
+using Application.HttpStatusCodes;
 
 namespace Application.Interfaces;
 
 public interface IGenreService
 {
-    Task<ApiResponse<bool>> AddGenreAsync(Genre genre);
-    Task<ApiResponse<bool>> UpdateGenreAsync(Genre genre);
-    Task<ApiResponse<bool>> DeleteGenreAsync(int id);
-    Task<ApiResponse<Genre>> GetGenreAsync(int id);
-    Task<ApiResponse<List<Genre>>> GetGenresAsync();
+    Task<ServiceStatusCodes<bool>> AddGenreAsync(GenreDTO genreDTO);
+    Task<ServiceStatusCodes<bool>> UpdateGenreAsync(GenreDTO genreDTO, int id);
+    Task<ServiceStatusCodes<bool>> DeleteGenreAsync(int id);
+    Task<ServiceStatusCodes<GenreDTO>> GetGenreAsync(int id);
+    Task<ServiceStatusCodes<List<GenreDTO>>> GetGenresAsync();
+    Task<ServiceStatusCodes<int>> GetGenresAmountAsync();
 }

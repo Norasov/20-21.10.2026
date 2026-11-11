@@ -1,13 +1,14 @@
-using Application.Responses;
-using Domain.Entities;
+using Application.DTOs.Books;
+using Application.HttpStatusCodes;
 
 namespace Application.Interfaces;
 
 public interface IBookService
 {
-    Task<ApiResponse<bool>> AddBookAsync(Book book);
-    Task<ApiResponse<bool>> UpdateBookAsync(Book book);
-    Task<ApiResponse<bool>> DeleteBookAsync(int id);
-    Task<ApiResponse<Book>> GetBookAsync(int id);
-    Task<ApiResponse<List<Book>>> GetBooksAsync();
+    Task<ServiceStatusCodes<bool>> AddBookAsync(CreateBookDTO bookDTO);
+    Task<ServiceStatusCodes<bool>> UpdateBookAsync(UpdateBookDTO bookDTO, int id);
+    Task<ServiceStatusCodes<bool>> DeleteBookAsync(int id);
+    Task<ServiceStatusCodes<BookDTO>> GetBookAsync(int id);
+    Task<ServiceStatusCodes<List<BookDTO>>> GetBooksAsync();
+    Task<ServiceStatusCodes<int>> GetBooksAmountAsync();
 }
