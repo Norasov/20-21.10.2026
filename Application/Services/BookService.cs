@@ -11,6 +11,9 @@ public class BookService(IBookRepository repository) : IBookService
     private readonly IBookRepository _repository = repository;
     public async Task<ServiceStatusCodes<bool>> AddBookAsync(CreateBookDTO bookDTO)
     {
+        if(string.IsNullOrWhiteSpace(bookDTO.Title))
+            return ServiceStatusCodes<bool>.BadRequest("Вам необходимо заполнить название книги.");
+
         Book book = new()
         {
             Title = bookDTO.Title,
@@ -32,6 +35,19 @@ public class BookService(IBookRepository repository) : IBookService
 
         return ServiceStatusCodes<bool>.NoContent();
     }
+
+    public async Task<ServiceStatusCodes<int>> GetAmountByGenreAsync(int genreId)
+    {
+        var amount = await _repository.GetAmountByGenreAsync(genreId);
+        return ServiceStatusCodes<int>.Ok(amount);
+    }
+
+    public async Task<ServiceStatusCodes<int>> GetAmountByPublishedYearAsync(int year)
+    {
+        var amount = await _repository.GetAmountByPublishedYearAsync(year);
+        return ServiceStatusCodes<int>.Ok(amount);
+    }
+
 
     public async Task<ServiceStatusCodes<BookDTO>> GetBookAsync(int id)
     {
@@ -75,6 +91,31 @@ public class BookService(IBookRepository repository) : IBookService
         return ServiceStatusCodes<List<BookDTO>>.Ok(bookDTOs);
     }
 
+    public async Task<ServiceStatusCodes<int>> GetMaxPublishedYearByAuthorAsync(int authorId)
+    {
+        var maxYear = await _repository.GetMaxPublishedYearByAuthorAsync(authorId);
+        return ServiceStatusCodes<int>.Ok(maxYear);
+    }
+
+    public async Task<ServiceStatusCodes<int>> GetMaxPublishedYearByGenreAsync(int genreId)
+    {
+        var maxYear = await _repository.GetMaxPublishedYearByGenreAsync(genreId);
+        return ServiceStatusCodes<int>.Ok(maxYear);
+    }
+
+    public async Task<ServiceStatusCodes<int>> GetMinPublishedYearByAuthorAsync(int authorId)
+    {
+        var minYear = await _repository.GetMinPublishedYearByAuthorAsync(authorId);
+        return ServiceStatusCodes<int>.Ok(minYear);
+    }
+
+    public async Task<ServiceStatusCodes<int>> GetMinPublishedYearByGenreAsync(int genreId)
+    {
+        var minYear = await _repository.GetMinPublishedYearByGenreAsync(genreId);
+        return ServiceStatusCodes<int>.Ok(minYear);
+    }
+
+
     public async Task<ServiceStatusCodes<bool>> UpdateBookAsync(UpdateBookDTO bookDTO, int id)
     {
         var update = await _repository.GetBookAsync(id);
@@ -91,5 +132,4 @@ public class BookService(IBookRepository repository) : IBookService
 
         return ServiceStatusCodes<bool>.Ok(updated);
     }
-
 }

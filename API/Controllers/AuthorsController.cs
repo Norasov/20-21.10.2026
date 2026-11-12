@@ -25,6 +25,13 @@ public class AuthorsController(IAuthorService service) : ControllerBase
         return this.ToActionResult(author);
     }
 
+    [HttpGet("amount-of-authors")]
+    public async Task<IActionResult> AmountOfAuthors()
+    {
+        var amount = await _service.GetAuthorsAmountAsync();
+        return this.ToActionResult(amount);
+    }
+
     [HttpPost]
     public async Task<IActionResult> AddAuthor(AuthorDTO authorDTO)
     {
@@ -32,7 +39,7 @@ public class AuthorsController(IAuthorService service) : ControllerBase
         return this.ToActionResult(add);
     }
 
-    [HttpPut] 
+    [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateAuthor(AuthorDTO authorDTO, int id)
     {
         var update = await _service.UpdateAuthorAsync(authorDTO, id);
@@ -44,12 +51,5 @@ public class AuthorsController(IAuthorService service) : ControllerBase
     {
         var delete = await _service.DeleteAuthorAsync(id);
         return this.ToActionResult(delete);
-    }
-
-    [HttpGet("amount-of-authors")]
-    public async Task<IActionResult> AmountOfAuthors()
-    {
-        var amount = await _service.GetAuthorsAmountAsync();
-        return this.ToActionResult(amount);
     }
 }

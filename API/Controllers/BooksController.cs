@@ -32,6 +32,48 @@ public class BooksController(IBookService service) : ControllerBase
         return this.ToActionResult(book);
     }
 
+    [HttpGet("min-published-year-by-author")]
+    public async Task<IActionResult> GetMinPublishedYearByAuthor(int id)
+    {
+        var minYear = await _service.GetMinPublishedYearByAuthorAsync(id);
+        return this.ToActionResult(minYear);
+    }
+
+    [HttpGet("max-published-year-by-author")]
+    public async Task<IActionResult> GetMaxPublishedYearByAuthor(int id)
+    {
+        var maxYear = await _service.GetMaxPublishedYearByAuthorAsync(id);
+        return this.ToActionResult(maxYear);
+    }
+
+    [HttpGet("amount-by-published-year/{year}")]
+    public async Task<IActionResult> GetAmountByPublishedYear(int year)
+    {
+        var amount = await _service.GetAmountByPublishedYearAsync(year);
+        return this.ToActionResult(amount);
+    }
+
+    [HttpGet("amount-by-genre")]
+    public async Task<IActionResult> GetAmountByGenre(int id)
+    {
+        var amount = await _service.GetAmountByGenreAsync(id);
+        return this.ToActionResult(amount);
+    }
+
+    [HttpGet("min-published-year-by-genre")]
+    public async Task<IActionResult> GetMinPublishedYearByGenre(int id)
+    {
+        var minYear = await _service.GetMinPublishedYearByGenreAsync(id);
+        return this.ToActionResult(minYear);
+    }
+
+    [HttpGet("max-published-year-by-genre")]
+    public async Task<IActionResult> GetMaxPublishedYearByGenre(int id)
+    {
+        var maxYear = await _service.GetMaxPublishedYearByGenreAsync(id);
+        return this.ToActionResult(maxYear);
+    }
+
     [HttpPost]
     public async Task<IActionResult> AddBook(CreateBookDTO bookDTO)
     {
