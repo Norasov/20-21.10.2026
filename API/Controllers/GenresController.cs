@@ -7,10 +7,12 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class GenresController(IGenreService service) : ControllerBase
+public class GenresController(
+    IGenreService service,
+    ILogger<GenresController> logger) : ControllerBase
 {
     private IGenreService _service = service;
-
+    private readonly ILogger<GenresController> _logger = logger;
     [HttpGet]
     public async Task<IActionResult> GetGenres()
     {

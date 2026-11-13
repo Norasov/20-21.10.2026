@@ -1,5 +1,4 @@
-
-
+using API.Middleware;
 using Application.Interfaces;
 using Application.Services;
 using Domain.Interfaces;
@@ -27,13 +26,13 @@ builder.Services.AddScoped<IGenreService, GenreService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.MapControllers();
 app.Run();

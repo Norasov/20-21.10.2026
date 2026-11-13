@@ -7,10 +7,12 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class BooksController(IBookService service) : ControllerBase
+public class BooksController(
+    IBookService service,
+    ILogger<BooksController> logger) : ControllerBase
 {
     private readonly IBookService _service = service;
-    
+    private readonly ILogger<BooksController> _logger = logger;
     [HttpGet]
     public async Task<IActionResult> GetBooks()
     {
@@ -91,7 +93,7 @@ public class BooksController(IBookService service) : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteBook(int id)
     {
-        var delete =await _service.DeleteBookAsync(id);
+        var delete = await _service.DeleteBookAsync(id);
         return this.ToActionResult(delete);
     }
 }

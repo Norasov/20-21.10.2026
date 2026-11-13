@@ -7,10 +7,12 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthorsController(IAuthorService service) : ControllerBase
+public class AuthorsController(
+    IAuthorService service,
+    ILogger<AuthorsController> logger) : ControllerBase
 {
     private readonly IAuthorService _service = service;
-
+    private readonly ILogger<AuthorsController> _logger = logger;
     [HttpGet]
     public async Task<IActionResult> GetAuthors()
     {
