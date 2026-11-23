@@ -1,40 +1,18 @@
-using System.Data;
-using Npgsql;
+using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+
 namespace Infrastruture.Data;
 
-public class AppDbContext
+public class AppDbContext:DbContext
 {
-    private readonly string? connectionString = "Host=localhost;Port=5432;Database=booknest;Username=postgres;Password=p000";
-    public IDbConnection Connection() => new NpgsqlConnection(connectionString);
+    public AppDbContext(DbContextOptions<AppDbContext> options):base(options){}
 
-    public bool TestConnection(out string error)
+    public DbSet<Author> Authors {get;set;}
+    public DbSet<Book> Books {get;set;}
+    public DbSet<Genre> Genres {get;set;}
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        try
-        {
-            using var connection = Connection();
-            connection.Open();
-            error = "";
-            return true;
-        }
-        catch (InvalidOperationException ex)
-        {
-            error = ex.Message;
-            return false;
-        }
-        catch (ArgumentException ex)
-        {
-            error = $"Неверная строка подключения: {ex.Message}";
-            return false;
-        }
-        catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.InvalidPassword)
-        {
-            error = "Неверное имя пользователя или пароль.";
-            return false;
-        }
-        catch (NpgsqlException ex)
-        {
-            error = ex.Message;
-            return false;
-        }
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
     }
 }

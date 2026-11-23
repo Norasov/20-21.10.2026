@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Infrastruture\\Infrastruture.csproj": {}
+    "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Infrastruture\\Infrastruture.csproj": {}
   },
   "projects": {
-    "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Application\\Application.csproj": {
+    "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Application\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Application\\Application.csproj",
+        "projectUniqueName": "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Application\\Application.csproj",
         "projectName": "Application",
-        "projectPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Application\\Application.csproj",
-        "packagesPath": "C:\\Users\\muham\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Application\\obj\\",
+        "projectPath": "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Application\\Application.csproj",
+        "packagesPath": "C:\\Users\\Абдулло\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Application\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\muham\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Абдулло\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -24,10 +24,11 @@
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Domain\\Domain.csproj"
+              "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Domain\\Domain.csproj"
               }
             }
           }
@@ -42,10 +43,11 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.100"
+        "SdkAnalysisLevel": "10.0.400"
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -63,7 +65,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.404/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -341,17 +343,17 @@
         }
       }
     },
-    "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Domain\\Domain.csproj": {
+    "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Domain\\Domain.csproj",
+        "projectUniqueName": "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Domain\\Domain.csproj",
-        "packagesPath": "C:\\Users\\muham\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Domain\\obj\\",
+        "projectPath": "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Domain\\Domain.csproj",
+        "packagesPath": "C:\\Users\\Абдулло\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\muham\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Абдулло\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -361,6 +363,7 @@
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {}
           }
@@ -375,10 +378,11 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.100"
+        "SdkAnalysisLevel": "10.0.400"
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -396,7 +400,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.404/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -674,17 +678,17 @@
         }
       }
     },
-    "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Infrastruture\\Infrastruture.csproj": {
+    "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Infrastruture\\Infrastruture.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Infrastruture\\Infrastruture.csproj",
+        "projectUniqueName": "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Infrastruture\\Infrastruture.csproj",
         "projectName": "Infrastruture",
-        "projectPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Infrastruture\\Infrastruture.csproj",
-        "packagesPath": "C:\\Users\\muham\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Infrastruture\\obj\\",
+        "projectPath": "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Infrastruture\\Infrastruture.csproj",
+        "packagesPath": "C:\\Users\\Абдулло\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Infrastruture\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\muham\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Абдулло\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -694,13 +698,14 @@
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Application\\Application.csproj": {
-                "projectPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Application\\Application.csproj"
+              "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Application\\Application.csproj": {
+                "projectPath": "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Application\\Application.csproj"
               },
-              "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\muham\\OneDrive\\Desktop\\.NET\\BookNest\\Domain\\Domain.csproj"
+              "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\Абдулло\\Desktop\\Muhammad c#\\BookNest\\Domain\\Domain.csproj"
               }
             }
           }
@@ -715,19 +720,34 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.100"
+        "SdkAnalysisLevel": "10.0.400"
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
             "Dapper": {
               "target": "Package",
               "version": "[2.1.89, )"
             },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[10.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[10.0.0, )"
+            },
             "Npgsql": {
               "target": "Package",
               "version": "[10.0.3, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[10.0.0, )"
             }
           },
           "imports": [
@@ -746,7 +766,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.404/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
