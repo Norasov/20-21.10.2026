@@ -1,4 +1,3 @@
-using Dapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Infrastruture.Data;
