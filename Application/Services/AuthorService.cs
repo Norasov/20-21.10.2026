@@ -27,7 +27,7 @@ public class AuthorService(IAuthorRepository repository) : IAuthorService
     {
         var delete = await _repository.DeleteAuthorAsync(id);
         if(!delete)
-            return ServiceStatusCodes<bool>.NotFound("Нет фвтора с таким идентификатором.");
+            return ServiceStatusCodes<bool>.NotFound("Нет автора с таким идентификатором.");
 
         return ServiceStatusCodes<bool>.NoContent();
     }
@@ -36,7 +36,7 @@ public class AuthorService(IAuthorRepository repository) : IAuthorService
     {
         var get = await _repository.GetAuthorAsync(id);
         if(get is null)
-            ServiceStatusCodes<AuthorDTO>.NotFound("Нет автора с таким идентификатором.");
+            return ServiceStatusCodes<AuthorDTO>.NotFound("Нет автора с таким идентификатором.");
 
         AuthorDTO authorDTO = new()
         {
